@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppChatRouteImport } from './routes/app.chat'
 import { Route as AppDirectoryRouteImport } from './routes/app.directory'
 import { Route as AppRecipesRouteImport } from './routes/app.recipes'
@@ -25,6 +26,11 @@ const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppChatRoute = AppChatRouteImport.update({
   id: '/chat',
@@ -54,14 +60,15 @@ export interface FileRoutesByFullPath {
   '/app/directory': typeof AppDirectoryRoute
   '/app/recipes': typeof AppRecipesRoute
   '/app/store': typeof AppStoreRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppRouteWithChildren
   '/app/chat': typeof AppChatRoute
   '/app/directory': typeof AppDirectoryRoute
   '/app/recipes': typeof AppRecipesRoute
   '/app/store': typeof AppStoreRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +78,7 @@ export interface FileRoutesById {
   '/app/directory': typeof AppDirectoryRoute
   '/app/recipes': typeof AppRecipesRoute
   '/app/store': typeof AppStoreRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,14 +89,15 @@ export interface FileRouteTypes {
     | '/app/directory'
     | '/app/recipes'
     | '/app/store'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/app'
     | '/app/chat'
     | '/app/directory'
     | '/app/recipes'
     | '/app/store'
+    | '/app'
   id:
     | '__root__'
     | '/'
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/app/directory'
     | '/app/recipes'
     | '/app/store'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +129,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app'
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
     }
     '/app/chat': {
       id: '/app/chat'
@@ -156,6 +173,7 @@ interface AppRouteChildren {
   AppDirectoryRoute: typeof AppDirectoryRoute
   AppRecipesRoute: typeof AppRecipesRoute
   AppStoreRoute: typeof AppStoreRoute
+  AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -163,6 +181,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDirectoryRoute: AppDirectoryRoute,
   AppRecipesRoute: AppRecipesRoute,
   AppStoreRoute: AppStoreRoute,
+  AppIndexRoute: AppIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
