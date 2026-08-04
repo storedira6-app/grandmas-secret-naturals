@@ -134,7 +134,8 @@ export default function ChatTab() {
           onSubmit={(e) => {
             e.preventDefault();
             if (!input.trim()) return;
-            reply(input.trim(), RECIPES[Math.floor(Math.random() * RECIPES.length)].id);
+            const pick = RECIPES[Math.floor(Math.random() * RECIPES.length)]!;
+            reply(input.trim(), pick.id);
             setInput("");
             inputRef.current?.focus();
           }}
