@@ -4,6 +4,13 @@ import { Flame, CheckCircle2, Circle } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { RECIPES } from "@/data/content";
 import { RecipeCard } from "@/components/RecipeCard";
+import { useAuth } from "@/lib/auth";
+import {
+  computeStreak,
+  todayKey,
+  useRoutineHistory,
+  useUpdateRoutineToday,
+} from "@/lib/user-data";
 
 export const Route = createFileRoute("/app/recipes")({
   head: () => ({
@@ -29,11 +36,23 @@ const MOODS = [
 
 function RecipesTab() {
   const { t } = useI18n();
-  const [mood, setMood] = useState<string | null>(null);
-  const [done, setDone] = useState<number[]>([]);
+  const { user } = useAuth();
+  const { data: history = [] } = useRoutineHistory();
+  const update = useUpdateRoutineToday();
+  const today = history.find((d) => d.day === todayKey());
+  const streak = computeStreak(history);
+
+  const [localMood, setLocalMood] = useState<string | null>(null);
+  const [localDone, setLocalDone] = useState(0);
+  const mood = user ? (today?.mood ?? null) : localMood;
+  const doneCount = user ? (today?.steps_done ?? 0) : localDone;
+
+  const setMood = (m: string) => (user ? update.mutate({ mood: m }) : setLocalMood(m));
+  const setDoneCount = (n: number) =>
+    user ? update.mutate({ steps_done: n }) : setLocalDone(n);
 
   const routine = [t("onboard1d"), t("onboard2d"), t("onboard3d")];
-  const complete = done.length === routine.length;
+  const complete = doneCount >= routine.length;
 
   return (
     <div className="space-y-5">
@@ -44,7 +63,8 @@ function RecipesTab() {
             <p className="truncate text-xs text-muted-foreground">{t("moodSub")}</p>
           </div>
           <span className="flex shrink-0 items-center gap-1 rounded-full bg-accent/60 px-2.5 py-1 text-[11px] font-bold text-accent-foreground">
-            <Flame className="h-3 w-3" />7 {t("streak")}
+            <Flame className="h-3 w-3" />
+            {streak} {t("streak")}
           </span>
         </div>
         <div className="grid grid-cols-4 gap-2">
@@ -69,12 +89,12 @@ function RecipesTab() {
       <section className="glass-card animate-rise space-y-2 rounded-3xl p-4">
         <h2 className="text-base font-bold">{t("routine")}</h2>
         {routine.map((step, i) => {
-          const isDone = done.includes(i);
+          const isDone = i < doneCount;
           return (
             <button
               key={step}
               type="button"
-              onClick={() => setDone((d) => (isDone ? d.filter((x) => x !== i) : [...d, i]))}
+              onClick={() => setDoneCount(isDone ? i : i + 1)}
               className="flex w-full items-center gap-3 rounded-2xl bg-secondary/50 px-3 py-2.5 text-start transition-colors"
             >
               {isDone ? (

@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
 import { Leaf, Sparkles, Sun, ArrowLeft, ArrowRight } from "lucide-react";
 import heroImg from "@/assets/hero-natural.jpg";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { GoogleSignInButton } from "@/components/SignIn";
+import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/")({
 
 function Welcome() {
   const { t, dir } = useI18n();
-  const [pressed, setPressed] = useState(false);
+  const { user } = useAuth();
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight;
 
   const highlights = [
@@ -82,31 +83,19 @@ function Welcome() {
 
         <div className="mt-auto space-y-3 pt-8">
           <Link
-            to="/app/chat"
+            to={user ? "/app/dashboard" : "/app/chat"}
             className="gradient-forest animate-glow flex items-center justify-center gap-2 rounded-2xl py-4 text-base font-bold text-primary-foreground transition-transform active:scale-[0.97]"
           >
             {t("start")}
             <Arrow className="h-4 w-4" />
           </Link>
 
-          <button
-            type="button"
-            onClick={() => setPressed(true)}
-            className="glass-card flex w-full items-center justify-center gap-3 rounded-2xl py-3.5 text-sm font-semibold transition-transform active:scale-[0.97]"
-          >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
-              <path
-                fill="#EA4335"
-                d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1a6.2 6.2 0 0 1 0-12.4c1.9 0 3.2.8 4 1.5l2.7-2.6C17 2.9 14.7 2 12 2a10 10 0 1 0 0 20c5.8 0 9.6-4 9.6-9.7 0-.7-.1-1.2-.2-1.7H12z"
-              />
-            </svg>
-            {t("google")}
-          </button>
-
-          {pressed && (
+          {user ? (
             <p className="text-center text-[11px] text-muted-foreground">
-              Google sign-in needs the backend enabled — ask me to turn it on.
+              {t("hello")} {(user.user_metadata?.["full_name"] as string) ?? user.email}
             </p>
+          ) : (
+            <GoogleSignInButton />
           )}
 
           <Link
