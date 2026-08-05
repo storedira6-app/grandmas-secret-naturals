@@ -1,8 +1,11 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { Leaf, Flame } from "lucide-react";
+import { useMemo } from "react";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { BottomNav } from "@/components/BottomNav";
+import { computeStreak, useRoutineHistory } from "@/lib/user-data";
+import { useReminderScheduler } from "@/lib/reminders";
 
 export const Route = createFileRoute("/app")({
   component: AppLayout,
@@ -10,6 +13,9 @@ export const Route = createFileRoute("/app")({
 
 function AppLayout() {
   const { t } = useI18n();
+  const { data: history = [] } = useRoutineHistory();
+  const streak = useMemo(() => computeStreak(history), [history]);
+  useReminderScheduler();
 
   return (
     <div className="mx-auto min-h-screen max-w-md bg-background">
@@ -27,7 +33,8 @@ function AppLayout() {
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <span className="flex items-center gap-1 rounded-full bg-accent/60 px-2.5 py-1 text-[11px] font-bold text-accent-foreground">
-            <Flame className="h-3 w-3" />7
+            <Flame className="h-3 w-3" />
+            {streak}
           </span>
           <LanguageSwitcher />
         </div>
