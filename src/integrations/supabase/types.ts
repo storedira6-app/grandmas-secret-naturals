@@ -14,7 +14,114 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          lang: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          lang?: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          lang?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reminder_settings: {
+        Row: {
+          evening_time: string
+          hydration_enabled: boolean
+          hydration_interval_min: number
+          morning_time: string
+          notifications_enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          evening_time?: string
+          hydration_enabled?: boolean
+          hydration_interval_min?: number
+          morning_time?: string
+          notifications_enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          evening_time?: string
+          hydration_enabled?: boolean
+          hydration_interval_min?: number
+          morning_time?: string
+          notifications_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      routine_days: {
+        Row: {
+          day: string
+          id: string
+          mood: string | null
+          steps_done: number
+          steps_total: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          day?: string
+          id?: string
+          mood?: string | null
+          steps_done?: number
+          steps_total?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          day?: string
+          id?: string
+          mood?: string | null
+          steps_done?: number
+          steps_total?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      saved_recipes: {
+        Row: {
+          created_at: string
+          id: string
+          recipe_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          recipe_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          recipe_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
