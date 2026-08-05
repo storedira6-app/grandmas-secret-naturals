@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
 import { Leaf, Sparkles, Sun, ArrowLeft, ArrowRight } from "lucide-react";
 import heroImg from "@/assets/hero-natural.jpg";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { GoogleSignInButton } from "@/components/SignIn";
+import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/")({
 
 function Welcome() {
   const { t, dir } = useI18n();
-  const [pressed, setPressed] = useState(false);
+  const { user } = useAuth();
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight;
 
   const highlights = [
