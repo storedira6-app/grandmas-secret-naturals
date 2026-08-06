@@ -32,12 +32,12 @@ export async function generateRecipeWithGemini(opts: {
 }): Promise<GeneratedRecipe> {
   const language = LANG_NAME[opts.lang] ?? "English";
   const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
     {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        "x-goog-api-key": opts.apiKey,
+        "x-goog-api-key": opts.apiKey.trim(),
       },
       body: JSON.stringify({
         systemInstruction: {
