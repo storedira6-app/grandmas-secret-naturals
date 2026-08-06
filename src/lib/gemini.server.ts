@@ -32,7 +32,7 @@ export async function generateRecipeWithGemini(opts: {
 }): Promise<GeneratedRecipe> {
   const language = LANG_NAME[opts.lang] ?? "English";
   const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
     {
       method: "POST",
       headers: {
