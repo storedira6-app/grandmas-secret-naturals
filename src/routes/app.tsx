@@ -1,11 +1,12 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { Leaf, Flame } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { BottomNav } from "@/components/BottomNav";
 import { computeStreak, useRoutineHistory } from "@/lib/user-data";
 import { useReminderScheduler } from "@/lib/reminders";
+import { hideBanner, initAds, showBanner } from "@/lib/ads";
 
 export const Route = createFileRoute("/app")({
   component: AppLayout,
@@ -16,6 +17,15 @@ function AppLayout() {
   const { data: history = [] } = useRoutineHistory();
   const streak = useMemo(() => computeStreak(history), [history]);
   useReminderScheduler();
+
+  useEffect(() => {
+    void initAds().then(showBanner);
+    return () => {
+      void hideBanner();
+    };
+  }, []);
+
+
 
   return (
     <div className="mx-auto min-h-screen max-w-md bg-background">
