@@ -145,24 +145,25 @@ export default function ChatTab() {
         <div className="-mx-1 mb-2 flex gap-2 overflow-x-auto px-1 pb-1">
           {quick.map((q) => (
             <button
-              key={q.key}
+              key={q}
               type="button"
-              onClick={() => reply(t(q.key), q.recipe)}
-              className="glass-card shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold text-primary transition-transform active:scale-95"
+              disabled={typing}
+              onClick={() => void reply(t(q))}
+              className="glass-card shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold text-primary transition-transform active:scale-95 disabled:opacity-50"
             >
-              {t(q.key)}
+              {t(q)}
             </button>
           ))}
         </div>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (!input.trim()) return;
-            const pick = RECIPES[Math.floor(Math.random() * RECIPES.length)]!;
-            reply(input.trim(), pick.id);
+            if (!input.trim() || typing) return;
+            void reply(input.trim());
             setInput("");
             inputRef.current?.focus();
           }}
+
           className="glass-card flex items-center gap-2 rounded-full p-1.5"
         >
           <input
