@@ -1,10 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import grandmaImg from "@/assets/grandma-noura.jpg";
 import { useI18n } from "@/lib/i18n";
-import { RECIPES } from "@/data/content";
-import { RecipeCard } from "@/components/RecipeCard";
+import { GeneratedRecipeCard } from "@/components/GeneratedRecipeCard";
+import { generateRecipe } from "@/lib/gemini.functions";
+import { showInterstitial } from "@/lib/ads";
+import type { GeneratedRecipe } from "@/lib/gemini.server";
+
 
 export const Route = createFileRoute("/app/chat")({
   head: () => ({
