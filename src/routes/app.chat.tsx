@@ -123,9 +123,8 @@ export default function ChatTab() {
                 {m.text}
               </div>
             </div>
-            {m.recipeId && (
-              <RecipeCard recipe={RECIPES.find((r) => r.id === m.recipeId)!} />
-            )}
+            {m.recipe && <GeneratedRecipeCard recipe={m.recipe} />}
+
           </div>
         ))}
         {typing && (
