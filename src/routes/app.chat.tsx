@@ -1,10 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import grandmaImg from "@/assets/grandma-noura.jpg";
 import { useI18n } from "@/lib/i18n";
-import { RECIPES } from "@/data/content";
-import { RecipeCard } from "@/components/RecipeCard";
+import { GeneratedRecipeCard } from "@/components/GeneratedRecipeCard";
+import { generateRecipe } from "@/lib/gemini.functions";
+import { showInterstitial } from "@/lib/ads";
+import type { GeneratedRecipe } from "@/lib/gemini.server";
+
 
 export const Route = createFileRoute("/app/chat")({
   head: () => ({
@@ -21,7 +25,21 @@ export const Route = createFileRoute("/app/chat")({
   component: ChatTab,
 });
 
-type Msg = { id: number; from: "grandma" | "me"; text: string; recipeId?: string };
+type Msg = { id: number; from: "grandma" | "me"; text: string; recipe?: GeneratedRecipe };
+
+const INTRO_TEXT: Record<string, string> = {
+  ar: "طيب يا حبيبتي 🌿 حضّرت لك الوصفة دي:",
+  en: "Of course, dear 🌿 here is the ritual I prepared for you:",
+  fr: "Bien sûr, ma chérie 🌿 voici le rituel que je t'ai préparé :",
+  es: "Claro, cariño 🌿 aquí tienes el ritual que te preparé:",
+};
+
+const ERROR_TEXT: Record<string, string> = {
+  ar: "معلش يا حبيبتي، ما قدرتش أجهّز الوصفة دلوقتي. جربي تاني بعد شوية 🌿",
+  en: "Sorry dear, I couldn't prepare the recipe right now. Please try again in a moment 🌿",
+  fr: "Désolée ma chérie, je n'ai pas pu préparer la recette. Réessaie dans un instant 🌿",
+  es: "Lo siento, cariño, no pude preparar la receta. Inténtalo de nuevo en un momento 🌿",
+};
 
 export default function ChatTab() {
   const { t, lang } = useI18n();
@@ -30,6 +48,7 @@ export default function ChatTab() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
+  const askGrandma = useServerFn(generateRecipe);
 
   useEffect(() => {
     setMessages([{ id: 1, from: "grandma", text: t("chatIntro") }]);
@@ -40,32 +59,38 @@ export default function ChatTab() {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typing]);
 
-  const quick = [
-    { key: "quickHair", recipe: "night-lotion" },
-    { key: "quickGlow", recipe: "morning-mask" },
-    { key: "quickSlim", recipe: "day-hydrator" },
-    { key: "quickAcne", recipe: "morning-mask" },
-    { key: "quickSleep", recipe: "night-lotion" },
-  ];
+  const quick = ["quickHair", "quickGlow", "quickSlim", "quickAcne", "quickSleep"];
 
-  const reply = (text: string, recipeId: string) => {
+  const reply = async (text: string) => {
+    if (typing) return;
     setTyping(true);
     setMessages((m) => [...m, { id: Date.now(), from: "me", text }]);
-    window.setTimeout(() => {
-      setTyping(false);
+    try {
+      const [recipe] = await Promise.all([
+        askGrandma({ data: { ingredients: text, lang } }),
+        // Interstitial ad plays while the recipe is being generated (native only).
+        showInterstitial(),
+      ]);
       setMessages((m) => [
         ...m,
         {
           id: Date.now() + 1,
           from: "grandma",
-          text: t("chatIntro").startsWith("أهلاً")
-            ? "طيب يا حبيبتي 🌿 جربي الوصفة دي بانتظام، وهتشوفي الفرق بإذن الله:"
-            : "Of course, dear 🌿 Try this ritual regularly and you'll see the difference:",
-          recipeId,
+          text: INTRO_TEXT[lang] ?? INTRO_TEXT["en"]!,
+          recipe,
         },
       ]);
-    }, 900);
+    } catch (e) {
+      console.error(e);
+      setMessages((m) => [
+        ...m,
+        { id: Date.now() + 1, from: "grandma", text: ERROR_TEXT[lang] ?? ERROR_TEXT["en"]! },
+      ]);
+    } finally {
+      setTyping(false);
+    }
   };
+
 
   return (
     <div className="space-y-4">
@@ -98,9 +123,8 @@ export default function ChatTab() {
                 {m.text}
               </div>
             </div>
-            {m.recipeId && (
-              <RecipeCard recipe={RECIPES.find((r) => r.id === m.recipeId)!} />
-            )}
+            {m.recipe && <GeneratedRecipeCard recipe={m.recipe} />}
+
           </div>
         ))}
         {typing && (
@@ -121,24 +145,25 @@ export default function ChatTab() {
         <div className="-mx-1 mb-2 flex gap-2 overflow-x-auto px-1 pb-1">
           {quick.map((q) => (
             <button
-              key={q.key}
+              key={q}
               type="button"
-              onClick={() => reply(t(q.key), q.recipe)}
-              className="glass-card shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold text-primary transition-transform active:scale-95"
+              disabled={typing}
+              onClick={() => void reply(t(q))}
+              className="glass-card shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold text-primary transition-transform active:scale-95 disabled:opacity-50"
             >
-              {t(q.key)}
+              {t(q)}
             </button>
           ))}
         </div>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (!input.trim()) return;
-            const pick = RECIPES[Math.floor(Math.random() * RECIPES.length)]!;
-            reply(input.trim(), pick.id);
+            if (!input.trim() || typing) return;
+            void reply(input.trim());
             setInput("");
             inputRef.current?.focus();
           }}
+
           className="glass-card flex items-center gap-2 rounded-full p-1.5"
         >
           <input
