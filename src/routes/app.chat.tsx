@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send } from "lucide-react";
+import { Mic, Send, Square } from "lucide-react";
+import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import grandmaImg from "@/assets/grandma-noura.jpg";
 import { useI18n } from "@/lib/i18n";
 import { GeneratedRecipeCard } from "@/components/GeneratedRecipeCard";
 import { generateRecipe } from "@/lib/gemini.functions";
+import { transcribeAudio } from "@/lib/stt.functions";
+import { startRecording, blobToBase64, type VoiceRecorder } from "@/lib/recorder";
 import { showInterstitial } from "@/lib/ads";
 import type { GeneratedRecipe } from "@/lib/gemini.server";
 
@@ -49,6 +52,10 @@ export default function ChatTab() {
   const inputRef = useRef<HTMLInputElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const askGrandma = useServerFn(generateRecipe);
+  const transcribe = useServerFn(transcribeAudio);
+  const [recording, setRecording] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+  const recorderRef = useRef<VoiceRecorder | null>(null);
 
   useEffect(() => {
     setMessages([{ id: 1, from: "grandma", text: t("chatIntro") }]);
@@ -90,6 +97,48 @@ export default function ChatTab() {
       setTyping(false);
     }
   };
+
+  const toggleMic = async () => {
+    if (transcribing || typing) return;
+    if (recording) {
+      const rec = recorderRef.current;
+      recorderRef.current = null;
+      setRecording(false);
+      if (!rec) return;
+      setTranscribing(true);
+      try {
+        const blob = await rec.stop();
+        if (blob.size < 4000) {
+          toast.error(t("micEmpty"));
+          return;
+        }
+        const audioBase64 = await blobToBase64(blob);
+        const { text } = await transcribe({ data: { audioBase64, mimeType: "audio/wav", lang } });
+        if (!text.trim()) {
+          toast.error(t("micEmpty"));
+          return;
+        }
+        await reply(text.trim());
+      } catch (e) {
+        console.error(e);
+        toast.error(t("micEmpty"));
+      } finally {
+        setTranscribing(false);
+      }
+      return;
+    }
+    try {
+      recorderRef.current = await startRecording();
+      setRecording(true);
+    } catch (e) {
+      console.error(e);
+      toast.error(t("micDenied"));
+    }
+  };
+
+  useEffect(() => () => recorderRef.current?.cancel(), []);
+
+
 
 
   return (
@@ -166,14 +215,30 @@ export default function ChatTab() {
 
           className="glass-card flex items-center gap-2 rounded-full p-1.5"
         >
+          <button
+            type="button"
+            onClick={() => void toggleMic()}
+            disabled={typing || transcribing}
+            aria-label={recording ? t("micStop") : t("mic")}
+            className={`grid h-9 w-9 shrink-0 place-items-center rounded-full transition-transform active:scale-90 disabled:opacity-50 ${
+              recording
+                ? "animate-pulse bg-destructive text-destructive-foreground"
+                : "bg-secondary text-primary"
+            }`}
+          >
+            {recording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+          </button>
           <input
             ref={inputRef}
             autoFocus
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={t("chatPlaceholder")}
+            placeholder={
+              recording ? t("micListening") : transcribing ? t("micProcessing") : t("chatPlaceholder")
+            }
             className="min-w-0 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground"
           />
+
           <button
             type="submit"
             aria-label={t("send")}
