@@ -52,6 +52,10 @@ export default function ChatTab() {
   const inputRef = useRef<HTMLInputElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const askGrandma = useServerFn(generateRecipe);
+  const transcribe = useServerFn(transcribeAudio);
+  const [recording, setRecording] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+  const recorderRef = useRef<VoiceRecorder | null>(null);
 
   useEffect(() => {
     setMessages([{ id: 1, from: "grandma", text: t("chatIntro") }]);
