@@ -47,7 +47,7 @@ export const Route = createFileRoute("/app/directory")({
   component: DirectoryTab,
 });
 
-const L: Record<Lang, Record<string, string>> = {
+const L = {
   ar: {
     title: "دليل الطبيعة",
     sub: "أماكن موثوقة رشّحتها بنات المجتمع",
