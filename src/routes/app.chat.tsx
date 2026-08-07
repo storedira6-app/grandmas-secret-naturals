@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send } from "lucide-react";
+import { Mic, Send, Square } from "lucide-react";
+import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import grandmaImg from "@/assets/grandma-noura.jpg";
 import { useI18n } from "@/lib/i18n";
 import { GeneratedRecipeCard } from "@/components/GeneratedRecipeCard";
 import { generateRecipe } from "@/lib/gemini.functions";
+import { transcribeAudio } from "@/lib/stt.functions";
+import { startRecording, blobToBase64, type VoiceRecorder } from "@/lib/recorder";
 import { showInterstitial } from "@/lib/ads";
 import type { GeneratedRecipe } from "@/lib/gemini.server";
 
