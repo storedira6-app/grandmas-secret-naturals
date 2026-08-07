@@ -98,6 +98,48 @@ export default function ChatTab() {
     }
   };
 
+  const toggleMic = async () => {
+    if (transcribing || typing) return;
+    if (recording) {
+      const rec = recorderRef.current;
+      recorderRef.current = null;
+      setRecording(false);
+      if (!rec) return;
+      setTranscribing(true);
+      try {
+        const blob = await rec.stop();
+        if (blob.size < 4000) {
+          toast.error(t("micEmpty"));
+          return;
+        }
+        const audioBase64 = await blobToBase64(blob);
+        const { text } = await transcribe({ data: { audioBase64, mimeType: "audio/wav", lang } });
+        if (!text.trim()) {
+          toast.error(t("micEmpty"));
+          return;
+        }
+        await reply(text.trim());
+      } catch (e) {
+        console.error(e);
+        toast.error(t("micEmpty"));
+      } finally {
+        setTranscribing(false);
+      }
+      return;
+    }
+    try {
+      recorderRef.current = await startRecording();
+      setRecording(true);
+    } catch (e) {
+      console.error(e);
+      toast.error(t("micDenied"));
+    }
+  };
+
+  useEffect(() => () => recorderRef.current?.cancel(), []);
+
+
+
 
   return (
     <div className="space-y-4">
