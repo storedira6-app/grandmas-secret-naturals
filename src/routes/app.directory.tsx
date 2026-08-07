@@ -382,7 +382,7 @@ function PlaceCard({
 }: {
   place: CommunityPlace;
   lang: Lang;
-  s: Record<string, string>;
+  s: (typeof L)["en"];
   index: number;
   saved: boolean;
   onToggleSave: () => void;
