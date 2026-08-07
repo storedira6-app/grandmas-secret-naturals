@@ -215,14 +215,30 @@ export default function ChatTab() {
 
           className="glass-card flex items-center gap-2 rounded-full p-1.5"
         >
+          <button
+            type="button"
+            onClick={() => void toggleMic()}
+            disabled={typing || transcribing}
+            aria-label={recording ? t("micStop") : t("mic")}
+            className={`grid h-9 w-9 shrink-0 place-items-center rounded-full transition-transform active:scale-90 disabled:opacity-50 ${
+              recording
+                ? "animate-pulse bg-destructive text-destructive-foreground"
+                : "bg-secondary text-primary"
+            }`}
+          >
+            {recording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+          </button>
           <input
             ref={inputRef}
             autoFocus
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={t("chatPlaceholder")}
+            placeholder={
+              recording ? t("micListening") : transcribing ? t("micProcessing") : t("chatPlaceholder")
+            }
             className="min-w-0 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground"
           />
+
           <button
             type="submit"
             aria-label={t("send")}
