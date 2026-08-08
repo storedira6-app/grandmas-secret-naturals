@@ -74,9 +74,54 @@ export default function ChatTab() {
   const endRef = useRef<HTMLDivElement>(null);
   const askGrandma = useServerFn(generateRecipe);
   const transcribe = useServerFn(transcribeAudio);
+  const scanIngredients = useServerFn(analyzeIngredients);
+  const { award } = useGlow();
   const [recording, setRecording] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
   const recorderRef = useRef<VoiceRecorder | null>(null);
+
+  const onPhoto = async (file: File | undefined) => {
+    if (!file || scanning || typing) return;
+    const preview = URL.createObjectURL(file);
+    setMessages((m) => [...m, { id: Date.now(), from: "me", text: t("snapShort"), photo: preview }]);
+    setScanning(true);
+    try {
+      const imageBase64 = await fileToBase64(file);
+      const [result] = await Promise.all([
+        scanIngredients({ data: { imageBase64, mimeType: file.type || "image/jpeg", lang } }),
+        showInterstitial(),
+      ]);
+      setMessages((m) => [
+        ...m,
+        {
+          id: Date.now() + 1,
+          from: "grandma",
+          text: INTRO_TEXT[lang] ?? INTRO_TEXT["en"]!,
+          recipe: {
+            title: result.title,
+            minutes: result.minutes,
+            ingredients: result.ingredients,
+            steps: result.steps,
+            tip: result.tip,
+          },
+          detected: result.detected,
+          benefits: result.benefits,
+        },
+      ]);
+      award(15, t("glowScan"));
+    } catch (e) {
+      console.error(e);
+      setMessages((m) => [
+        ...m,
+        { id: Date.now() + 1, from: "grandma", text: t("scanFailed") },
+      ]);
+    } finally {
+      setScanning(false);
+    }
+  };
+
 
   useEffect(() => {
     setMessages([{ id: 1, from: "grandma", text: t("chatIntro") }]);
