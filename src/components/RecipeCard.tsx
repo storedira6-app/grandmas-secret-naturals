@@ -43,8 +43,14 @@ export function RecipeCard({ recipe, index = 0 }: { recipe: Recipe; index?: numb
             }
             toggle.mutate(
               { recipeId: recipe.id, save: !saved },
-              { onSuccess: (didSave) => toast(didSave ? t("savedToast") : t("unsavedToast")) },
+              {
+                onSuccess: (didSave) => {
+                  toast(didSave ? t("savedToast") : t("unsavedToast"));
+                  if (didSave) award(5, t("glowSaved"));
+                },
+              },
             );
+
           }}
           aria-label={t("saveRecipe")}
           className="glass-card absolute end-3 top-3 grid h-9 w-9 place-items-center rounded-full text-primary transition-transform active:scale-90"
