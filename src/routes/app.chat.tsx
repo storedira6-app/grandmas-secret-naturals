@@ -31,7 +31,25 @@ export const Route = createFileRoute("/app/chat")({
   component: ChatTab,
 });
 
-type Msg = { id: number; from: "grandma" | "me"; text: string; recipe?: GeneratedRecipe };
+type Msg = {
+  id: number;
+  from: "grandma" | "me";
+  text: string;
+  recipe?: GeneratedRecipe;
+  detected?: string[];
+  benefits?: string[];
+  photo?: string;
+};
+
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("read failed"));
+    reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
+    reader.readAsDataURL(file);
+  });
+}
+
 
 const INTRO_TEXT: Record<string, string> = {
   ar: "طيب يا حبيبتي 🌿 حضّرت لك الوصفة دي:",
