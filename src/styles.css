@@ -195,3 +195,49 @@
   color: transparent;
   animation: shimmer 4s linear infinite;
 }
+
+@keyframes drift-up {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-160px) translateX(18px) scale(1.15);
+    opacity: 0;
+  }
+}
+@utility animate-drift {
+  animation: drift-up linear infinite;
+}
+
+@keyframes scan-line {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(1000%);
+  }
+}
+@utility animate-scan {
+  animation: scan-line 1.8s ease-in-out infinite;
+}
+
+@keyframes spring-in {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.01);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+@utility animate-spring {
+  animation: spring-in 0.5s cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
