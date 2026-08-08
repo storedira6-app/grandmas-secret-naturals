@@ -1,16 +1,19 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Mic, Send, Square } from "lucide-react";
+import { Camera, Mic, Send, Square, Sparkles, ScanLine } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import grandmaImg from "@/assets/grandma-noura.jpg";
 import { useI18n } from "@/lib/i18n";
+import { useGlow } from "@/lib/glow";
 import { GeneratedRecipeCard } from "@/components/GeneratedRecipeCard";
 import { generateRecipe } from "@/lib/gemini.functions";
+import { analyzeIngredients } from "@/lib/vision.functions";
 import { transcribeAudio } from "@/lib/stt.functions";
 import { startRecording, blobToBase64, type VoiceRecorder } from "@/lib/recorder";
 import { showInterstitial } from "@/lib/ads";
 import type { GeneratedRecipe } from "@/lib/gemini.server";
+
 
 
 export const Route = createFileRoute("/app/chat")({
@@ -28,7 +31,25 @@ export const Route = createFileRoute("/app/chat")({
   component: ChatTab,
 });
 
-type Msg = { id: number; from: "grandma" | "me"; text: string; recipe?: GeneratedRecipe };
+type Msg = {
+  id: number;
+  from: "grandma" | "me";
+  text: string;
+  recipe?: GeneratedRecipe;
+  detected?: string[];
+  benefits?: string[];
+  photo?: string;
+};
+
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("read failed"));
+    reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
+    reader.readAsDataURL(file);
+  });
+}
+
 
 const INTRO_TEXT: Record<string, string> = {
   ar: "طيب يا حبيبتي 🌿 حضّرت لك الوصفة دي:",
@@ -53,9 +74,54 @@ export default function ChatTab() {
   const endRef = useRef<HTMLDivElement>(null);
   const askGrandma = useServerFn(generateRecipe);
   const transcribe = useServerFn(transcribeAudio);
+  const scanIngredients = useServerFn(analyzeIngredients);
+  const { award } = useGlow();
   const [recording, setRecording] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
   const recorderRef = useRef<VoiceRecorder | null>(null);
+
+  const onPhoto = async (file: File | undefined) => {
+    if (!file || scanning || typing) return;
+    const preview = URL.createObjectURL(file);
+    setMessages((m) => [...m, { id: Date.now(), from: "me", text: t("snapShort"), photo: preview }]);
+    setScanning(true);
+    try {
+      const imageBase64 = await fileToBase64(file);
+      const [result] = await Promise.all([
+        scanIngredients({ data: { imageBase64, mimeType: file.type || "image/jpeg", lang } }),
+        showInterstitial(),
+      ]);
+      setMessages((m) => [
+        ...m,
+        {
+          id: Date.now() + 1,
+          from: "grandma",
+          text: INTRO_TEXT[lang] ?? INTRO_TEXT["en"]!,
+          recipe: {
+            title: result.title,
+            minutes: result.minutes,
+            ingredients: result.ingredients,
+            steps: result.steps,
+            tip: result.tip,
+          },
+          detected: result.detected,
+          benefits: result.benefits,
+        },
+      ]);
+      award(15, t("glowScan"));
+    } catch (e) {
+      console.error(e);
+      setMessages((m) => [
+        ...m,
+        { id: Date.now() + 1, from: "grandma", text: t("scanFailed") },
+      ]);
+    } finally {
+      setScanning(false);
+    }
+  };
+
 
   useEffect(() => {
     setMessages([{ id: 1, from: "grandma", text: t("chatIntro") }]);
@@ -158,6 +224,36 @@ export default function ChatTab() {
         </div>
       </div>
 
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={scanning || typing}
+          className="glass-card flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-xs font-bold text-primary transition-transform active:scale-95 disabled:opacity-50"
+        >
+          <Camera className="h-4 w-4" />
+          <span className="truncate">{t("snapCta")}</span>
+        </button>
+        <Link
+          to="/app/quiz"
+          className="gradient-gold flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-xs font-bold text-gold-foreground transition-transform active:scale-95"
+        >
+          <Sparkles className="h-4 w-4" />
+          <span className="truncate">{t("quizTitle")}</span>
+        </Link>
+      </div>
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        hidden
+        onChange={(e) => {
+          void onPhoto(e.target.files?.[0]);
+          e.target.value = "";
+        }}
+      />
+
       <div className="space-y-3">
         {messages.map((m) => (
           <div key={m.id} className="animate-rise space-y-2">
@@ -169,13 +265,51 @@ export default function ChatTab() {
                     : "glass-card rounded-es-lg"
                 }`}
               >
+                {m.photo && (
+                  <img
+                    src={m.photo}
+                    alt=""
+                    className="mb-2 h-32 w-40 rounded-2xl object-cover"
+                  />
+                )}
                 {m.text}
               </div>
             </div>
+            {m.detected && m.detected.length > 0 && (
+              <div className="glass-card space-y-1.5 rounded-2xl p-3">
+                <p className="text-[11px] font-bold text-primary">{t("detected")}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {m.detected.map((d) => (
+                    <span
+                      key={d}
+                      className="rounded-full bg-accent/60 px-2.5 py-1 text-[11px] text-accent-foreground"
+                    >
+                      {d}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
             {m.recipe && <GeneratedRecipeCard recipe={m.recipe} />}
-
+            {m.benefits && m.benefits.length > 0 && (
+              <div className="glass-card space-y-1 rounded-2xl p-3">
+                <p className="text-[11px] font-bold text-primary">{t("benefits")}</p>
+                <ul className="space-y-1 text-xs text-muted-foreground">
+                  {m.benefits.map((b) => (
+                    <li key={b}>🌿 {b}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         ))}
+        {scanning && (
+          <div className="glass-card animate-rise relative flex items-center gap-2 overflow-hidden rounded-3xl px-4 py-3 text-xs font-semibold text-primary">
+            <ScanLine className="h-4 w-4 animate-pulse" />
+            {t("scanning")}
+            <span className="animate-scan pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-gold" />
+          </div>
+        )}
         {typing && (
           <div className="glass-card inline-flex gap-1 rounded-3xl px-4 py-3">
             {[0, 1, 2].map((i) => (
@@ -189,6 +323,7 @@ export default function ChatTab() {
         )}
         <div ref={endRef} />
       </div>
+
 
       <div className="fixed inset-x-0 bottom-24 z-30 mx-auto max-w-md px-4">
         <div className="-mx-1 mb-2 flex gap-2 overflow-x-auto px-1 pb-1">

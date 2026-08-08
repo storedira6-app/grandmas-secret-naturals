@@ -83,12 +83,26 @@ function Welcome() {
 
         <div className="mt-auto space-y-3 pt-8">
           <Link
+            to="/app/quiz"
+            className="glass-card animate-spring flex items-center gap-3 rounded-3xl p-3 text-start transition-transform active:scale-[0.98]"
+          >
+            <span className="gradient-gold grid h-10 w-10 shrink-0 place-items-center rounded-2xl text-gold-foreground">
+              <Sparkles className="h-5 w-5" />
+            </span>
+            <span className="min-w-0">
+              <span className="block truncate text-sm font-bold">{t("quizTitle")}</span>
+              <span className="block truncate text-[11px] text-muted-foreground">{t("quizSub")}</span>
+            </span>
+          </Link>
+
+          <Link
             to={user ? "/app/dashboard" : "/app/chat"}
             className="gradient-forest animate-glow flex items-center justify-center gap-2 rounded-2xl py-4 text-base font-bold text-primary-foreground transition-transform active:scale-[0.97]"
           >
             {t("start")}
             <Arrow className="h-4 w-4" />
           </Link>
+
 
           {user ? (
             <p className="text-center text-[11px] text-muted-foreground">

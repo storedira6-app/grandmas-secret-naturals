@@ -3,16 +3,19 @@ import { Clock, Leaf, Bookmark, BookmarkCheck } from "lucide-react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
+import { useGlow } from "@/lib/glow";
 import { useSavedRecipes, useToggleSavedRecipe } from "@/lib/user-data";
 import type { Recipe } from "@/data/content";
 
 export function RecipeCard({ recipe, index = 0 }: { recipe: Recipe; index?: number }) {
   const { lang, t } = useI18n();
   const { user } = useAuth();
+  const { award } = useGlow();
   const [open, setOpen] = useState(false);
   const { data: savedIds = [] } = useSavedRecipes();
   const toggle = useToggleSavedRecipe();
   const saved = savedIds.includes(recipe.id);
+
 
   return (
     <article
@@ -40,8 +43,14 @@ export function RecipeCard({ recipe, index = 0 }: { recipe: Recipe; index?: numb
             }
             toggle.mutate(
               { recipeId: recipe.id, save: !saved },
-              { onSuccess: (didSave) => toast(didSave ? t("savedToast") : t("unsavedToast")) },
+              {
+                onSuccess: (didSave) => {
+                  toast(didSave ? t("savedToast") : t("unsavedToast"));
+                  if (didSave) award(5, t("glowSaved"));
+                },
+              },
             );
+
           }}
           aria-label={t("saveRecipe")}
           className="glass-card absolute end-3 top-3 grid h-9 w-9 place-items-center rounded-full text-primary transition-transform active:scale-90"
