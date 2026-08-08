@@ -15,6 +15,7 @@ import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppChatRouteImport } from './routes/app.chat'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppDirectoryRouteImport } from './routes/app.directory'
+import { Route as AppQuizRouteImport } from './routes/app.quiz'
 import { Route as AppRecipesRouteImport } from './routes/app.recipes'
 import { Route as AppStoreRouteImport } from './routes/app.store'
 
@@ -48,6 +49,11 @@ const AppDirectoryRoute = AppDirectoryRouteImport.update({
   path: '/directory',
   getParentRoute: () => AppRoute,
 } as any)
+const AppQuizRoute = AppQuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppRecipesRoute = AppRecipesRouteImport.update({
   id: '/recipes',
   path: '/recipes',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/app/chat': typeof AppChatRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/directory': typeof AppDirectoryRoute
+  '/app/quiz': typeof AppQuizRoute
   '/app/recipes': typeof AppRecipesRoute
   '/app/store': typeof AppStoreRoute
   '/app/': typeof AppIndexRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/app/chat': typeof AppChatRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/directory': typeof AppDirectoryRoute
+  '/app/quiz': typeof AppQuizRoute
   '/app/recipes': typeof AppRecipesRoute
   '/app/store': typeof AppStoreRoute
   '/app': typeof AppIndexRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/app/chat': typeof AppChatRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/directory': typeof AppDirectoryRoute
+  '/app/quiz': typeof AppQuizRoute
   '/app/recipes': typeof AppRecipesRoute
   '/app/store': typeof AppStoreRoute
   '/app/': typeof AppIndexRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/app/chat'
     | '/app/dashboard'
     | '/app/directory'
+    | '/app/quiz'
     | '/app/recipes'
     | '/app/store'
     | '/app/'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/app/chat'
     | '/app/dashboard'
     | '/app/directory'
+    | '/app/quiz'
     | '/app/recipes'
     | '/app/store'
     | '/app'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/app/chat'
     | '/app/dashboard'
     | '/app/directory'
+    | '/app/quiz'
     | '/app/recipes'
     | '/app/store'
     | '/app/'
@@ -170,6 +182,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDirectoryRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/quiz': {
+      id: '/app/quiz'
+      path: '/quiz'
+      fullPath: '/app/quiz'
+      preLoaderRoute: typeof AppQuizRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/recipes': {
       id: '/app/recipes'
       path: '/recipes'
@@ -191,6 +210,7 @@ interface AppRouteChildren {
   AppChatRoute: typeof AppChatRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDirectoryRoute: typeof AppDirectoryRoute
+  AppQuizRoute: typeof AppQuizRoute
   AppRecipesRoute: typeof AppRecipesRoute
   AppStoreRoute: typeof AppStoreRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -200,6 +220,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppChatRoute: AppChatRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDirectoryRoute: AppDirectoryRoute,
+  AppQuizRoute: AppQuizRoute,
   AppRecipesRoute: AppRecipesRoute,
   AppStoreRoute: AppStoreRoute,
   AppIndexRoute: AppIndexRoute,
