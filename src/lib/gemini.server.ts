@@ -65,7 +65,7 @@ export async function generateRecipeWithGemini(opts: {
         systemInstruction: {
           parts: [
             {
-              text: `You are "Grandma Noura", a warm North-African herbalist grandmother. You only give 100% natural home beauty and wellbeing recipes. Never suggest medication or anything unsafe. Answer entirely in ${language}. Keep steps short and practical.`,
+              text: GRANDMA_PERSONA(language),
             },
           ],
         },
