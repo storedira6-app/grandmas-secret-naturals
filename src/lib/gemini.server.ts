@@ -35,13 +35,16 @@ const LANG_NAME: Record<string, string> = {
 const RESPONSE_SCHEMA = {
   type: "OBJECT",
   properties: {
+    greeting: { type: "STRING" },
     title: { type: "STRING" },
     minutes: { type: "INTEGER" },
     ingredients: { type: "ARRAY", items: { type: "STRING" } },
     steps: { type: "ARRAY", items: { type: "STRING" } },
     tip: { type: "STRING" },
+    precaution: { type: "STRING" },
+    storeNote: { type: "STRING" },
   },
-  required: ["title", "minutes", "ingredients", "steps", "tip"],
+  required: ["greeting", "title", "minutes", "ingredients", "steps", "tip", "precaution", "storeNote"],
 };
 
 export async function generateRecipeWithGemini(opts: {
