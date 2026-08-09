@@ -1,4 +1,5 @@
-import { Clock, Leaf, Sparkles } from "lucide-react";
+import { Clock, Leaf, ShoppingBag, Sparkles } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import type { GeneratedRecipe } from "@/lib/gemini.server";
 import { useI18n } from "@/lib/i18n";
 
