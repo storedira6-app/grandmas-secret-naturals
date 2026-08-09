@@ -107,5 +107,8 @@ export async function generateRecipeWithGemini(opts: {
     ingredients: (parsed.ingredients ?? []).map(String),
     steps: (parsed.steps ?? []).map(String),
     tip: String(parsed.tip ?? ""),
+    greeting: String(parsed.greeting ?? ""),
+    precaution: String(parsed.precaution ?? ""),
+    storeNote: String(parsed.storeNote ?? ""),
   };
 }
