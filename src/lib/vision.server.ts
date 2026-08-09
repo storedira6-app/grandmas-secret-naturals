@@ -103,6 +103,9 @@ TASK: Identify edible/kitchen ingredients visible in the photo ("detected"), the
     ingredients: (parsed.ingredients ?? []).map(String),
     steps: (parsed.steps ?? []).map(String),
     tip: String(parsed.tip ?? ""),
+    greeting: String(parsed.greeting ?? ""),
+    precaution: String(parsed.precaution ?? ""),
+    storeNote: String(parsed.storeNote ?? ""),
     benefits: (parsed.benefits ?? []).map(String),
   };
 }
