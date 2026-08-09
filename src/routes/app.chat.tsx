@@ -98,13 +98,15 @@ export default function ChatTab() {
         {
           id: Date.now() + 1,
           from: "grandma",
-          text: INTRO_TEXT[lang] ?? INTRO_TEXT["en"]!,
+          text: result.greeting?.trim() || INTRO_TEXT[lang] || INTRO_TEXT["en"]!,
           recipe: {
             title: result.title,
             minutes: result.minutes,
             ingredients: result.ingredients,
             steps: result.steps,
             tip: result.tip,
+            precaution: result.precaution ?? "",
+            storeNote: result.storeNote ?? "",
           },
           detected: result.detected,
           benefits: result.benefits,
@@ -149,7 +151,7 @@ export default function ChatTab() {
         {
           id: Date.now() + 1,
           from: "grandma",
-          text: INTRO_TEXT[lang] ?? INTRO_TEXT["en"]!,
+          text: recipe.greeting?.trim() || INTRO_TEXT[lang] || INTRO_TEXT["en"]!,
           recipe,
         },
       ]);

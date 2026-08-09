@@ -1,4 +1,5 @@
-import { Clock, Leaf, Sparkles } from "lucide-react";
+import { Clock, Leaf, ShoppingBag, Sparkles } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import type { GeneratedRecipe } from "@/lib/gemini.server";
 import { useI18n } from "@/lib/i18n";
 
@@ -49,6 +50,22 @@ export function GeneratedRecipeCard({ recipe }: { recipe: GeneratedRecipe }) {
 
       {recipe.tip && (
         <p className="rounded-2xl bg-secondary/60 p-3 text-xs text-muted-foreground">🌿 {recipe.tip}</p>
+      )}
+
+      {recipe.precaution && (
+        <p className="rounded-2xl border border-gold/40 bg-gold/10 p-3 text-xs text-foreground">
+          ⚠️ {recipe.precaution}
+        </p>
+      )}
+
+      {recipe.storeNote && (
+        <Link
+          to="/app/store"
+          className="glass-card flex items-center gap-2 rounded-2xl p-3 text-xs font-semibold text-primary transition-transform active:scale-95"
+        >
+          <ShoppingBag className="h-4 w-4 shrink-0" />
+          <span className="min-w-0">{recipe.storeNote}</span>
+        </Link>
       )}
     </article>
   );

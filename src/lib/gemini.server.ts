@@ -4,7 +4,26 @@ export type GeneratedRecipe = {
   ingredients: string[];
   steps: string[];
   tip: string;
+  greeting?: string;
+  precaution?: string;
+  storeNote?: string;
 };
+
+export const GRANDMA_PERSONA = (language: string) =>
+  `You are "الجدة نورة" (Grandma Noura): a warm, loving, wise, traditional Middle Eastern / North African grandmother and an expert in 100% natural beauty, holistic skincare and traditional herbal remedies.
+
+PERSONA
+- Exceptionally warm, affectionate, motherly, encouraging, gently humorous.
+- In Arabic use sweet colloquial terms of endearment ("يا بنيتي", "يا حبيبة جدتك", "يا نوّارة", "يا غالية") in an easy Egyptian/Levantine/North-African blend.
+- Answer entirely in ${language}, keeping the same loving grandma essence in any language.
+- Advocate only 100% natural, safe, clean remedies with common ingredients (honey, yogurt, oats, rosewater, argan oil, chamomile...). Never suggest medication, harsh chemicals, dangerous hacks, bleaching or harmful skin lightening.
+
+FIELDS
+- "greeting": a loving motherly opening line that makes her feel safe and pampered.
+- "steps": short, clean, practical steps covering preparation and how to apply.
+- "tip": one warm extra tip from grandma.
+- "precaution": "تنبيه الجدة" (Grandma's Precaution) — always remind her to do a quick patch test on a small area of skin first in case of allergy.
+- "storeNote": ONLY when the request needs precise formulation (sunscreen, specialized serums, heavy haircare) or she wants fast results — a sweet line inviting her to see grandma's trusted natural picks in the Store tab above; otherwise return an empty string.`;
 
 const LANG_NAME: Record<string, string> = {
   ar: "Arabic",
@@ -16,13 +35,16 @@ const LANG_NAME: Record<string, string> = {
 const RESPONSE_SCHEMA = {
   type: "OBJECT",
   properties: {
+    greeting: { type: "STRING" },
     title: { type: "STRING" },
     minutes: { type: "INTEGER" },
     ingredients: { type: "ARRAY", items: { type: "STRING" } },
     steps: { type: "ARRAY", items: { type: "STRING" } },
     tip: { type: "STRING" },
+    precaution: { type: "STRING" },
+    storeNote: { type: "STRING" },
   },
-  required: ["title", "minutes", "ingredients", "steps", "tip"],
+  required: ["greeting", "title", "minutes", "ingredients", "steps", "tip", "precaution", "storeNote"],
 };
 
 export async function generateRecipeWithGemini(opts: {
@@ -43,7 +65,7 @@ export async function generateRecipeWithGemini(opts: {
         systemInstruction: {
           parts: [
             {
-              text: `You are "Grandma Noura", a warm North-African herbalist grandmother. You only give 100% natural home beauty and wellbeing recipes. Never suggest medication or anything unsafe. Answer entirely in ${language}. Keep steps short and practical.`,
+              text: GRANDMA_PERSONA(language),
             },
           ],
         },
@@ -85,5 +107,8 @@ export async function generateRecipeWithGemini(opts: {
     ingredients: (parsed.ingredients ?? []).map(String),
     steps: (parsed.steps ?? []).map(String),
     tip: String(parsed.tip ?? ""),
+    greeting: String(parsed.greeting ?? ""),
+    precaution: String(parsed.precaution ?? ""),
+    storeNote: String(parsed.storeNote ?? ""),
   };
 }

@@ -1,4 +1,4 @@
-import type { GeneratedRecipe } from "./gemini.server";
+import { GRANDMA_PERSONA, type GeneratedRecipe } from "./gemini.server";
 
 const LANG_NAME: Record<string, string> = {
   ar: "Arabic",
@@ -11,14 +11,28 @@ const RESPONSE_SCHEMA = {
   type: "OBJECT",
   properties: {
     detected: { type: "ARRAY", items: { type: "STRING" } },
+    greeting: { type: "STRING" },
     title: { type: "STRING" },
     minutes: { type: "INTEGER" },
     ingredients: { type: "ARRAY", items: { type: "STRING" } },
     steps: { type: "ARRAY", items: { type: "STRING" } },
     tip: { type: "STRING" },
+    precaution: { type: "STRING" },
+    storeNote: { type: "STRING" },
     benefits: { type: "ARRAY", items: { type: "STRING" } },
   },
-  required: ["detected", "title", "minutes", "ingredients", "steps", "tip", "benefits"],
+  required: [
+    "detected",
+    "greeting",
+    "title",
+    "minutes",
+    "ingredients",
+    "steps",
+    "tip",
+    "precaution",
+    "storeNote",
+    "benefits",
+  ],
 };
 
 export type VisionRecipe = GeneratedRecipe & {
@@ -45,7 +59,9 @@ export async function analyzeIngredientsWithGemini(opts: {
         systemInstruction: {
           parts: [
             {
-              text: `You are "Grandma Noura", a warm North-African herbalist grandmother. Identify edible/kitchen ingredients visible in the photo, then create ONE safe, 100% natural DIY beauty recipe using only those ingredients (plus common pantry basics). Never suggest medication or anything unsafe. Answer entirely in ${language}. Keep steps short and practical. "benefits" = 2-4 short benefit phrases.`,
+              text: `${GRANDMA_PERSONA(language)}
+
+TASK: Identify edible/kitchen ingredients visible in the photo ("detected"), then create ONE safe, 100% natural DIY beauty recipe using only those ingredients (plus common pantry basics). "benefits" = 2-4 short benefit phrases.`,
             },
           ],
         },
@@ -87,6 +103,9 @@ export async function analyzeIngredientsWithGemini(opts: {
     ingredients: (parsed.ingredients ?? []).map(String),
     steps: (parsed.steps ?? []).map(String),
     tip: String(parsed.tip ?? ""),
+    greeting: String(parsed.greeting ?? ""),
+    precaution: String(parsed.precaution ?? ""),
+    storeNote: String(parsed.storeNote ?? ""),
     benefits: (parsed.benefits ?? []).map(String),
   };
 }
