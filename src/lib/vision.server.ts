@@ -1,4 +1,4 @@
-import type { GeneratedRecipe } from "./gemini.server";
+import { GRANDMA_PERSONA, type GeneratedRecipe } from "./gemini.server";
 
 const LANG_NAME: Record<string, string> = {
   ar: "Arabic",
@@ -11,14 +11,28 @@ const RESPONSE_SCHEMA = {
   type: "OBJECT",
   properties: {
     detected: { type: "ARRAY", items: { type: "STRING" } },
+    greeting: { type: "STRING" },
     title: { type: "STRING" },
     minutes: { type: "INTEGER" },
     ingredients: { type: "ARRAY", items: { type: "STRING" } },
     steps: { type: "ARRAY", items: { type: "STRING" } },
     tip: { type: "STRING" },
+    precaution: { type: "STRING" },
+    storeNote: { type: "STRING" },
     benefits: { type: "ARRAY", items: { type: "STRING" } },
   },
-  required: ["detected", "title", "minutes", "ingredients", "steps", "tip", "benefits"],
+  required: [
+    "detected",
+    "greeting",
+    "title",
+    "minutes",
+    "ingredients",
+    "steps",
+    "tip",
+    "precaution",
+    "storeNote",
+    "benefits",
+  ],
 };
 
 export type VisionRecipe = GeneratedRecipe & {
