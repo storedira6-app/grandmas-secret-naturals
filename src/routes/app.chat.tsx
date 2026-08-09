@@ -151,7 +151,7 @@ export default function ChatTab() {
         {
           id: Date.now() + 1,
           from: "grandma",
-          text: INTRO_TEXT[lang] ?? INTRO_TEXT["en"]!,
+          text: recipe.greeting?.trim() || INTRO_TEXT[lang] || INTRO_TEXT["en"]!,
           recipe,
         },
       ]);
