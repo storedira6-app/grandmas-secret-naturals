@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Flame, CheckCircle2, Circle } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { RECIPES } from "@/data/content";
