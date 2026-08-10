@@ -36,6 +36,28 @@ export function useCatalog() {
   });
 }
 
+/**
+ * Geolocation-driven display currency. Prices are stored already including the
+ * 50% margin, so conversion happens strictly after the margin is applied.
+ */
+export function useCurrency() {
+  const { country } = useCountry();
+  const { data: fx } = useQuery({
+    queryKey: ["fx-rates"],
+    queryFn: () => getFxRates(),
+    staleTime: 1000 * 60 * 60 * 6,
+  });
+  const rates = fx?.rates ?? FALLBACK_RATES;
+  const currency = currencyForCountry(country);
+
+  /** Converts a retail price from its stored currency into the visitor's currency. */
+  const display = (amount: number, from: string) =>
+    formatMoney(convertAmount(amount, from, currency, rates), currency);
+
+  return { currency, rates, display, convert: (a: number, from: string) => convertAmount(a, from, currency, rates) };
+}
+
+
 function norm(s: string) {
   return s.toLowerCase();
 }
