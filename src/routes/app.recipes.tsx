@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Flame, CheckCircle2, Circle } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { RECIPES } from "@/data/content";
@@ -11,6 +11,7 @@ import {
   useRoutineHistory,
   useUpdateRoutineToday,
 } from "@/lib/user-data";
+import { localDayNumber, rotateDaily, useDayKey } from "@/lib/daily";
 
 export const Route = createFileRoute("/app/recipes")({
   head: () => ({
@@ -35,12 +36,28 @@ const MOODS = [
 ];
 
 function RecipesTab() {
-  const { t } = useI18n();
+  const { lang, t } = useI18n();
   const { user } = useAuth();
   const { data: history = [] } = useRoutineHistory();
   const update = useUpdateRoutineToday();
   const today = history.find((d) => d.day === todayKey());
   const streak = computeStreak(history);
+
+  // Re-computes automatically when the local calendar day flips.
+  const dayKey = useDayKey();
+  const dailyRecipes = useMemo(
+    () => rotateDaily(RECIPES, localDayNumber(new Date(`${dayKey}T00:00:00`))),
+    [dayKey],
+  );
+  const dayLabel = useMemo(
+    () =>
+      new Date(`${dayKey}T00:00:00`).toLocaleDateString(
+        lang === "ar" ? "ar" : lang,
+        { weekday: "long", day: "numeric", month: "long" },
+      ),
+    [dayKey, lang],
+  );
+
 
   const [localMood, setLocalMood] = useState<string | null>(null);
   const [localDone, setLocalDone] = useState(0);
@@ -112,14 +129,20 @@ function RecipesTab() {
       </section>
 
       <section className="space-y-4">
-        <div>
-          <h2 className="text-xl font-bold">{t("today")}</h2>
-          <p className="text-xs text-muted-foreground">{t("todaySub")}</p>
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+          <div className="min-w-0">
+            <h2 className="text-xl font-bold">{t("today")}</h2>
+            <p className="text-xs text-muted-foreground">{t("todaySub")}</p>
+          </div>
+          <span className="shrink-0 rounded-full bg-secondary px-2.5 py-1 text-[11px] font-semibold text-secondary-foreground">
+            {dayLabel}
+          </span>
         </div>
-        {RECIPES.map((r, i) => (
-          <RecipeCard key={r.id} recipe={r} index={i} />
+        {dailyRecipes.map((r, i) => (
+          <RecipeCard key={`${dayKey}-${r.id}`} recipe={r} index={i} />
         ))}
       </section>
+
     </div>
   );
 }
