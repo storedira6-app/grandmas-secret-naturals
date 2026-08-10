@@ -16,7 +16,7 @@ export function ProductRecommendations({
   const { t, lang } = useI18n();
   const { country, noon, egypt } = useCountry();
   const { data: catalog = [] } = useCatalog();
-  const { display } = useCurrency();
+  const { display, displayLabel } = useCurrency();
   const [checkout, setCheckout] = useState<CheckoutItem | null>(null);
 
   const picks = recommendForIngredients(ingredients, { catalog, noon, seed, limit: 2 });
@@ -55,7 +55,7 @@ export function ProductRecommendations({
                 key={`n-${p.id}`}
                 image={p.image}
                 name={p.name[lang]}
-                price={p.price}
+                price={displayLabel(p.price)}
                 label={t("buyNow")}
                 href={noonLinkFor(p, country)}
               />
@@ -67,7 +67,7 @@ export function ProductRecommendations({
               key={`a-${p.id}`}
               image={p.image}
               name={p.name[lang]}
-              price={p.price}
+              price={displayLabel(p.price)}
               label={t("buy")}
               href={p.url}
             />
