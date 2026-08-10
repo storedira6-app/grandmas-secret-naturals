@@ -64,7 +64,7 @@ export function GrandmaPicks() {
                 price={price}
                 label={t("order")}
                 trending={trend ? t("trending") : null}
-                onClick={() => setCheckout({ id: p.id, name: p.name, price })}
+                onClick={() => setCheckout({ id: p.id, name: p.name, amount: p.price, currency: p.currency })}
               />
             );
           }

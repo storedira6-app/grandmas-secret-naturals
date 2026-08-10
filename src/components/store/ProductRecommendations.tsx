@@ -44,7 +44,7 @@ export function ProductRecommendations({
                 name={p.name}
                 price={price}
                 label={t("order")}
-                onClick={() => setCheckout({ id: p.id, name: p.name, price })}
+                onClick={() => setCheckout({ id: p.id, name: p.name, amount: p.price, currency: p.currency })}
               />
             );
           }

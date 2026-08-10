@@ -11,6 +11,7 @@ import {
   formatMoney,
   parsePriceLabel,
 } from "@/lib/store/currency";
+import { useSelectedCurrency } from "@/lib/store/currency-selection";
 
 
 export function useCountry() {
@@ -44,13 +45,14 @@ export function useCatalog() {
  */
 export function useCurrency() {
   const { country } = useCountry();
+  const { selected, setSelectedCurrency } = useSelectedCurrency();
   const { data: fx } = useQuery({
     queryKey: ["fx-rates"],
     queryFn: () => getFxRates(),
     staleTime: 1000 * 60 * 60 * 6,
   });
   const rates = fx?.rates ?? FALLBACK_RATES;
-  const currency = currencyForCountry(country);
+  const currency = selected ?? currencyForCountry(country);
 
   /** Converts a retail price from its stored currency into the visitor's currency. */
   const display = (amount: number, from: string) =>
@@ -65,6 +67,8 @@ export function useCurrency() {
 
   return {
     currency,
+    selectedCurrency: selected,
+    setCurrency: setSelectedCurrency,
     rates,
     display,
     displayLabel,

@@ -9,6 +9,7 @@ import { EGYPT_COUPON_CODE } from "@/lib/store/pricing";
 import { useCatalog, useCountry, useCurrency } from "@/lib/store-client";
 import { CheckoutDialog, type CheckoutItem } from "@/components/store/CheckoutDialog";
 import { GrandmaPicks } from "@/components/store/GrandmaPicks";
+import { CurrencySwitcher } from "@/components/store/CurrencySwitcher";
 
 export const Route = createFileRoute("/app/store")({
   head: () => ({
@@ -57,9 +58,12 @@ function StoreTab() {
 
   return (
     <div className="space-y-5">
-      <header className="animate-rise">
-        <h1 className="text-xl font-bold">{t("storeHero")}</h1>
-        <p className="text-xs text-muted-foreground">{t("storeHeroSub")}</p>
+      <header className="animate-rise flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold">{t("storeHero")}</h1>
+          <p className="text-xs text-muted-foreground">{t("storeHeroSub")}</p>
+        </div>
+        <CurrencySwitcher />
       </header>
 
       <GrandmaPicks />
@@ -165,7 +169,7 @@ function StoreTab() {
                       <button
                         type="button"
                         disabled={!p.in_stock}
-                        onClick={() => setCheckout({ id: p.id, name: p.name, price })}
+                        onClick={() => setCheckout({ id: p.id, name: p.name, amount: p.price, currency: p.currency })}
                         className="gradient-forest flex items-center justify-center gap-1.5 rounded-2xl py-2 text-[11px] font-bold text-primary-foreground transition-transform active:scale-95 disabled:opacity-50"
                       >
                         <ShoppingBag className="h-3.5 w-3.5" />
