@@ -76,7 +76,7 @@ export function pickString(...values: unknown[]): string | null {
     if (typeof v === "string" && v.trim()) return v.trim();
     if (v && typeof v === "object") {
       const rec = v as Record<string, unknown>;
-      for (const key of ["ar", "en", "name", "value", "url", "full_size", "original"]) {
+      for (const key of ["ar", "en", "label", "name", "value", "url", "full_size", "original"]) {
         const nested = rec[key];
         if (typeof nested === "string" && nested.trim()) return nested.trim();
       }
