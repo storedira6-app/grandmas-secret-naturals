@@ -1,8 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { detectCountry, listStoreProducts, type StoreProduct } from "@/lib/store.functions";
+import { getFxRates } from "@/lib/fx.functions";
 import { NOON_PRODUCTS, type NoonProduct } from "@/data/noon";
 import { AFFILIATE_PRODUCTS, type AffiliateProduct } from "@/data/affiliate";
 import { regionModeFor, showsNoon, showsEgyptCoupon, showsDropship } from "@/lib/store/region";
+import {
+  FALLBACK_RATES,
+  convertAmount,
+  currencyForCountry,
+  formatMoney,
+} from "@/lib/store/currency";
 
 export function useCountry() {
   const { data } = useQuery({
@@ -28,6 +35,28 @@ export function useCatalog() {
     staleTime: 1000 * 60 * 10,
   });
 }
+
+/**
+ * Geolocation-driven display currency. Prices are stored already including the
+ * 50% margin, so conversion happens strictly after the margin is applied.
+ */
+export function useCurrency() {
+  const { country } = useCountry();
+  const { data: fx } = useQuery({
+    queryKey: ["fx-rates"],
+    queryFn: () => getFxRates(),
+    staleTime: 1000 * 60 * 60 * 6,
+  });
+  const rates = fx?.rates ?? FALLBACK_RATES;
+  const currency = currencyForCountry(country);
+
+  /** Converts a retail price from its stored currency into the visitor's currency. */
+  const display = (amount: number, from: string) =>
+    formatMoney(convertAmount(amount, from, currency, rates), currency);
+
+  return { currency, rates, display, convert: (a: number, from: string) => convertAmount(a, from, currency, rates) };
+}
+
 
 function norm(s: string) {
   return s.toLowerCase();

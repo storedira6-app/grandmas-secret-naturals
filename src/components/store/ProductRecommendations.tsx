@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { ShoppingBag, Sparkles } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import { formatPrice } from "@/lib/store/pricing";
 import { noonLinkFor } from "@/data/noon";
-import { useCatalog, useCountry, recommendForIngredients } from "@/lib/store-client";
+import { useCatalog, useCountry, useCurrency, recommendForIngredients } from "@/lib/store-client";
 import { CheckoutDialog, type CheckoutItem } from "./CheckoutDialog";
 
 /** Smart in-recipe product recommendations matched to the recipe ingredients. */
@@ -17,6 +16,7 @@ export function ProductRecommendations({
   const { t, lang } = useI18n();
   const { country, noon, egypt } = useCountry();
   const { data: catalog = [] } = useCatalog();
+  const { display } = useCurrency();
   const [checkout, setCheckout] = useState<CheckoutItem | null>(null);
 
   const picks = recommendForIngredients(ingredients, { catalog, noon, seed, limit: 2 });
@@ -36,7 +36,7 @@ export function ProductRecommendations({
         {picks.map((pick) => {
           if (pick.kind === "catalog") {
             const p = pick.product;
-            const price = formatPrice(p.price, p.currency);
+            const price = display(p.price, p.currency);
             return (
               <MiniCard
                 key={`c-${p.id}`}
