@@ -36,12 +36,28 @@ const MOODS = [
 ];
 
 function RecipesTab() {
-  const { t } = useI18n();
+  const { lang, t } = useI18n();
   const { user } = useAuth();
   const { data: history = [] } = useRoutineHistory();
   const update = useUpdateRoutineToday();
   const today = history.find((d) => d.day === todayKey());
   const streak = computeStreak(history);
+
+  // Re-computes automatically when the local calendar day flips.
+  const dayKey = useDayKey();
+  const dailyRecipes = useMemo(
+    () => rotateDaily(RECIPES, localDayNumber(new Date(`${dayKey}T00:00:00`))),
+    [dayKey],
+  );
+  const dayLabel = useMemo(
+    () =>
+      new Date(`${dayKey}T00:00:00`).toLocaleDateString(
+        lang === "ar" ? "ar" : lang,
+        { weekday: "long", day: "numeric", month: "long" },
+      ),
+    [dayKey, lang],
+  );
+
 
   const [localMood, setLocalMood] = useState<string | null>(null);
   const [localDone, setLocalDone] = useState(0);
