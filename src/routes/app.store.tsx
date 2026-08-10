@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 import { PRODUCTS } from "@/data/content";
 import { NOON_PRODUCTS, noonLinkFor } from "@/data/noon";
-import { formatPrice, EGYPT_COUPON_CODE } from "@/lib/store/pricing";
-import { useCatalog, useCountry } from "@/lib/store-client";
+import { EGYPT_COUPON_CODE } from "@/lib/store/pricing";
+import { useCatalog, useCountry, useCurrency } from "@/lib/store-client";
 import { CheckoutDialog, type CheckoutItem } from "@/components/store/CheckoutDialog";
 
 export const Route = createFileRoute("/app/store")({
@@ -36,6 +36,7 @@ function StoreTab() {
   const { t, lang } = useI18n();
   const { country, noon, egypt } = useCountry();
   const { data: catalog = [], isLoading } = useCatalog();
+  const { display } = useCurrency();
   const [filter, setFilter] = useState<Filter>("all");
   const [checkout, setCheckout] = useState<CheckoutItem | null>(null);
 
@@ -134,7 +135,7 @@ function StoreTab() {
           ) : (
             <div className="grid grid-cols-2 gap-3">
               {catalog.map((p, i) => {
-                const price = formatPrice(p.price, p.currency);
+                const price = display(p.price, p.currency);
                 return (
                   <article
                     key={p.id}
