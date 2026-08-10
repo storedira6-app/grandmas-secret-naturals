@@ -8,6 +8,7 @@ import { NOON_PRODUCTS, noonLinkFor } from "@/data/noon";
 import { EGYPT_COUPON_CODE } from "@/lib/store/pricing";
 import { useCatalog, useCountry, useCurrency } from "@/lib/store-client";
 import { CheckoutDialog, type CheckoutItem } from "@/components/store/CheckoutDialog";
+import { GrandmaPicks } from "@/components/store/GrandmaPicks";
 
 export const Route = createFileRoute("/app/store")({
   head: () => ({
@@ -36,7 +37,7 @@ function StoreTab() {
   const { t, lang } = useI18n();
   const { country, noon, egypt } = useCountry();
   const { data: catalog = [], isLoading } = useCatalog();
-  const { display } = useCurrency();
+  const { display, displayLabel } = useCurrency();
   const [filter, setFilter] = useState<Filter>("all");
   const [checkout, setCheckout] = useState<CheckoutItem | null>(null);
 
@@ -60,6 +61,8 @@ function StoreTab() {
         <h1 className="text-xl font-bold">{t("storeHero")}</h1>
         <p className="text-xs text-muted-foreground">{t("storeHeroSub")}</p>
       </header>
+
+      <GrandmaPicks />
 
       {egypt && (
         <button
@@ -103,6 +106,7 @@ function StoreTab() {
         </span>
       </a>
 
+      <h2 className="pt-1 text-base font-bold">{t("browseStore")}</h2>
       <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
         {filters.map((f) => (
           <button
@@ -195,7 +199,7 @@ function StoreTab() {
                 <div className="flex flex-1 flex-col gap-1.5 p-3">
                   <h3 className="text-sm leading-tight font-semibold">{p.name[lang]}</h3>
                   <p className="text-[11px] leading-tight text-muted-foreground">{p.note[lang]}</p>
-                  <p className="mt-auto pt-1 text-base font-bold text-primary">{p.price}</p>
+                  <p className="mt-auto pt-1 text-base font-bold text-primary">{displayLabel(p.price)}</p>
                   <a
                     href={noonLinkFor(p, country)}
                     target="_blank"
@@ -240,7 +244,7 @@ function StoreTab() {
                 <div className="flex flex-1 flex-col gap-1.5 p-3">
                   <h3 className="text-sm leading-tight font-semibold">{p.name[lang]}</h3>
                   <p className="text-[11px] leading-tight text-muted-foreground">{p.desc[lang]}</p>
-                  <p className="mt-auto pt-1 text-base font-bold text-primary">{p.price}</p>
+                  <p className="mt-auto pt-1 text-base font-bold text-primary">{displayLabel(p.price)}</p>
                   <a
                     href={p.url}
                     target="_blank"

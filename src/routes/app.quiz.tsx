@@ -6,6 +6,8 @@ import { useGlow } from "@/lib/glow";
 import { GeneratedRecipeCard } from "@/components/GeneratedRecipeCard";
 import { QUIZ_RECIPES, type QuizGoal } from "@/data/quiz-recipes";
 import { AFFILIATE_PRODUCTS } from "@/data/affiliate";
+import { useCurrency } from "@/lib/store-client";
+import { saveBeautyProfile } from "@/lib/store/beauty-profile";
 
 export const Route = createFileRoute("/app/quiz")({
   head: () => ({
@@ -34,6 +36,7 @@ const GOALS: QuizGoal[] = ["glow", "bright", "hydrate"];
 function QuizTab() {
   const { t, lang } = useI18n();
   const { award } = useGlow();
+  const { displayLabel } = useCurrency();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
 
@@ -46,7 +49,10 @@ function QuizTab() {
     next[step] = i;
     setAnswers(next);
     setStep((s) => s + 1);
-    if (step === STEPS.length - 1) award(10, t("glowQuiz"));
+    if (step === STEPS.length - 1) {
+      award(10, t("glowQuiz"));
+      saveBeautyProfile({ skin: next[0] ?? 0, concern: next[1] ?? 0, goal: next[2] ?? 0 });
+    }
   };
 
   const reset = () => {
@@ -133,7 +139,7 @@ function QuizTab() {
                     <p className="line-clamp-2 text-[10px] leading-tight text-muted-foreground">
                       {p.note[lang]}
                     </p>
-                    <p className="text-xs font-bold text-gold">{p.price}</p>
+                    <p className="text-xs font-bold text-gold">{displayLabel(p.price)}</p>
                     <a
                       href={p.url}
                       target="_blank"

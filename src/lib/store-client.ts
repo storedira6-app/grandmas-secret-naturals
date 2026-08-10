@@ -9,7 +9,9 @@ import {
   convertAmount,
   currencyForCountry,
   formatMoney,
+  parsePriceLabel,
 } from "@/lib/store/currency";
+
 
 export function useCountry() {
   const { data } = useQuery({
@@ -54,8 +56,22 @@ export function useCurrency() {
   const display = (amount: number, from: string) =>
     formatMoney(convertAmount(amount, from, currency, rates), currency);
 
-  return { currency, rates, display, convert: (a: number, from: string) => convertAmount(a, from, currency, rates) };
+  /** Converts a hardcoded price label ("$14.99", "SAR 89") into the visitor's currency. */
+  const displayLabel = (label: string) => {
+    const parsed = parsePriceLabel(label);
+    if (!parsed) return label;
+    return display(parsed.amount, parsed.currency);
+  };
+
+  return {
+    currency,
+    rates,
+    display,
+    displayLabel,
+    convert: (a: number, from: string) => convertAmount(a, from, currency, rates),
+  };
 }
+
 
 
 function norm(s: string) {

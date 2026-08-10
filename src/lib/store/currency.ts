@@ -69,3 +69,29 @@ export function formatMoney(value: number, currency: string, locale = "en"): str
   return symbol ? `${symbol}${amount}` : `${amount} ${currency}`;
 }
 
+
+const CODE_BY_SYMBOL: Record<string, string> = {
+  $: "USD",
+  "€": "EUR",
+  "£": "GBP",
+  "د.إ": "AED",
+  "ر.س": "SAR",
+  "ج.م": "EGP",
+  "د.م": "MAD",
+};
+
+/**
+ * Parses a hardcoded price label such as "$14.99", "SAR 89" or "89 MAD"
+ * into an amount + source currency so it can be converted to the visitor's currency.
+ */
+export function parsePriceLabel(label: string): { amount: number; currency: string } | null {
+  if (!label) return null;
+  const amount = Number((label.match(/[\d]+(?:[.,][\d]+)?/)?.[0] ?? "").replace(",", "."));
+  if (!Number.isFinite(amount) || amount <= 0) return null;
+  const code = label.match(/\b([A-Z]{3})\b/)?.[1];
+  if (code) return { amount, currency: code };
+  for (const [symbol, cur] of Object.entries(CODE_BY_SYMBOL)) {
+    if (label.includes(symbol)) return { amount, currency: cur };
+  }
+  return { amount, currency: DEFAULT_CURRENCY };
+}
