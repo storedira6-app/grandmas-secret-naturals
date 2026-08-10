@@ -49,11 +49,26 @@ export async function fetchCodePartnersProducts(): Promise<SupplierProduct[]> {
   return out;
 }
 
+const ENTITIES: Record<string, string> = {
+  "&nbsp;": " ",
+  "&amp;": "&",
+  "&quot;": '"',
+  "&#39;": "'",
+  "&lt;": "<",
+  "&gt;": ">",
+};
+
 function stripHtml(value: string | null): string | null {
   if (!value) return null;
-  const text = value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-  return text || null;
+  const text = value
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;|&amp;|&quot;|&#39;|&lt;|&gt;/g, (m) => ENTITIES[m] ?? " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!text) return null;
+  return text.length > 240 ? `${text.slice(0, 237)}…` : text;
 }
+
 
 function normalize(raw: Record<string, unknown>): SupplierProduct | null {
   const externalId = pickString(raw["id"], raw["sku"], raw["slug"]);
