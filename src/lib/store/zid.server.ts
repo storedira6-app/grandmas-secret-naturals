@@ -3,6 +3,9 @@ import { deriveTags, isBeautyProduct, pickString, toNumber, type SupplierProduct
 /** Grandma's Secret store identifier on the Zid platform. */
 export const ZID_STORE_ID = "3200580";
 
+/** Public storefront for the same Zid store. */
+export const ZID_STOREFRONT_URL = "https://shamsroyalmall.zid.store";
+
 const ZID_BASE = "https://api.zid.sa/v1";
 
 /** Fetches and normalizes the Zid managed store catalog. */
