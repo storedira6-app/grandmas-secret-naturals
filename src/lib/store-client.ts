@@ -1,8 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { detectCountry, listStoreProducts, type StoreProduct } from "@/lib/store.functions";
+import { getFxRates } from "@/lib/fx.functions";
 import { NOON_PRODUCTS, type NoonProduct } from "@/data/noon";
 import { AFFILIATE_PRODUCTS, type AffiliateProduct } from "@/data/affiliate";
 import { regionModeFor, showsNoon, showsEgyptCoupon, showsDropship } from "@/lib/store/region";
+import {
+  FALLBACK_RATES,
+  convertAmount,
+  currencyForCountry,
+  formatMoney,
+} from "@/lib/store/currency";
 
 export function useCountry() {
   const { data } = useQuery({
