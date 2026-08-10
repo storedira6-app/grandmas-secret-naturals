@@ -1,4 +1,6 @@
 /** Geolocation-driven currency engine for the store catalog. */
+import { roundUpHalf } from "./pricing";
+
 
 export const EUROZONE = [
   "FR", "DE", "ES", "IT", "PT", "BE", "NL", "LU", "IE", "AT", "FI", "GR",
