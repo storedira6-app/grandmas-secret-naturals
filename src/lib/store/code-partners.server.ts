@@ -1,6 +1,6 @@
 import { deriveTags, isBeautyProduct, pickString, toNumber, type SupplierProduct } from "./supplier-types";
 
-const DEFAULT_BASE = "https://api.codepartners.sa/v1";
+const DEFAULT_BASE = "https://api.cod.network/api/v2/seller";
 
 /**
  * Code Partners dropshipping catalog.
@@ -10,7 +10,10 @@ const DEFAULT_BASE = "https://api.codepartners.sa/v1";
 export async function fetchCodePartnersProducts(): Promise<SupplierProduct[]> {
   const apiKey = process.env["CODE_PARTNERS_API_KEY"];
   if (!apiKey) throw new Error("CODE_PARTNERS_API_KEY is not configured");
-  const base = (process.env["CODE_PARTNERS_API_BASE"] || DEFAULT_BASE).replace(/\/+$/, "");
+  const configured = process.env["CODE_PARTNERS_API_BASE"] ?? "";
+  // The base secret sometimes holds a token by mistake; only trust real URLs.
+  const base = (/^https?:\/\//.test(configured) ? configured : DEFAULT_BASE).replace(/\/+$/, "");
+
 
   const out: SupplierProduct[] = [];
   let page = 1;
