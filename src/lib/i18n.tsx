@@ -85,6 +85,11 @@ const ar: Dict = {
   bath: "حمامات معدنية",
   new: "جديد",
   trending: "الأكثر رواجاً",
+  picksTitle: "ترشيحات الجدة",
+  picksSub: "مختارة حسب الموسم والأكثر رواجاً",
+  picksForYou: "مختارة خصيصاً لبشرتك وشعرك",
+  picksQuizCta: "اعملي الاختبار",
+  browseStore: "تصفحي كل المنتجات",
 };
 
 const en: Dict = {
@@ -151,6 +156,11 @@ const en: Dict = {
   bath: "Thermal baths",
   new: "New",
   trending: "Trending",
+  picksTitle: "Grandma's Recommendations",
+  picksSub: "Seasonal picks & most popular right now",
+  picksForYou: "Handpicked for your skin & hair",
+  picksQuizCta: "Take the quiz",
+  browseStore: "Browse all products",
 };
 
 const fr: Dict = {
@@ -218,6 +228,11 @@ const fr: Dict = {
   bath: "Bains thermaux",
   new: "Nouveau",
   trending: "Tendance",
+  picksTitle: "Recommandations de Grand-Mère",
+  picksSub: "Sélection de saison & les plus populaires",
+  picksForYou: "Choisies pour ta peau et tes cheveux",
+  picksQuizCta: "Faire le test",
+  browseStore: "Voir tous les produits",
 };
 
 const es: Dict = {
@@ -285,6 +300,11 @@ const es: Dict = {
   bath: "Baños termales",
   new: "Nuevo",
   trending: "Tendencia",
+  picksTitle: "Recomendaciones de la Abuela",
+  picksSub: "Selección de temporada y lo más popular",
+  picksForYou: "Elegidas para tu piel y cabello",
+  picksQuizCta: "Hacer el test",
+  browseStore: "Ver todos los productos",
 };
 
 const extraEn: Dict = {
