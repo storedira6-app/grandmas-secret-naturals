@@ -17,7 +17,7 @@ function toRow(p: SupplierProduct) {
     image_url: p.image_url,
     currency: p.currency,
     base_cost: p.base_cost,
-    // 50% profit margin applied automatically on every supplier cost.
+    // 80% profit margin, ceiling-rounded to the nearest 0.50.
     price: retailPrice(p.base_cost),
     category: p.category,
     tags: p.tags,
@@ -67,7 +67,7 @@ async function runOne(source: "code" | "zid", fetcher: () => Promise<SupplierPro
   }
 }
 
-/** Ingests both supplier catalogs and applies the 50% retail margin. */
+/** Ingests both supplier catalogs and applies the 80% retail margin. */
 export async function syncAllSuppliers(): Promise<SyncResult[]> {
   return Promise.all([
     runOne("code", fetchCodePartnersProducts),
