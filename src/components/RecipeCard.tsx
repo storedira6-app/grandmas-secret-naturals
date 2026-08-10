@@ -6,6 +6,8 @@ import { useAuth } from "@/lib/auth";
 import { useGlow } from "@/lib/glow";
 import { useSavedRecipes, useToggleSavedRecipe } from "@/lib/user-data";
 import type { Recipe } from "@/data/content";
+import { ProductRecommendations } from "@/components/store/ProductRecommendations";
+
 
 export function RecipeCard({ recipe, index = 0 }: { recipe: Recipe; index?: number }) {
   const { lang, t } = useI18n();
