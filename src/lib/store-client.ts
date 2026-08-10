@@ -38,7 +38,7 @@ export function useCatalog() {
 
 /**
  * Geolocation-driven display currency. Prices are stored already including the
- * 50% margin, so conversion happens strictly after the margin is applied.
+ * 80% margin, so conversion happens strictly after the margin is applied.
  */
 export function useCurrency() {
   const { country } = useCountry();

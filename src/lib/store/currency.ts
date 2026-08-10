@@ -1,4 +1,6 @@
 /** Geolocation-driven currency engine for the store catalog. */
+import { roundUpHalf } from "./pricing";
+
 
 export const EUROZONE = [
   "FR", "DE", "ES", "IT", "PT", "BE", "NL", "LU", "IE", "AT", "FI", "GR",
@@ -35,7 +37,7 @@ export const FALLBACK_RATES: Record<string, number> = {
   OMR: 0.385,
 };
 
-/** Converts an amount between currencies using USD-based rates. */
+/** Converts an amount between currencies using USD-based rates, ceiling-rounded. */
 export function convertAmount(
   amount: number,
   from: string,
@@ -45,11 +47,11 @@ export function convertAmount(
   if (!Number.isFinite(amount) || amount <= 0) return 0;
   const src = (from || DEFAULT_CURRENCY).toUpperCase();
   const dst = (to || DEFAULT_CURRENCY).toUpperCase();
-  if (src === dst) return Math.round(amount * 100) / 100;
+  if (src === dst) return roundUpHalf(amount);
   const fromRate = rates[src] ?? FALLBACK_RATES[src];
   const toRate = rates[dst] ?? FALLBACK_RATES[dst];
-  if (!fromRate || !toRate) return Math.round(amount * 100) / 100;
-  return Math.round(((amount / fromRate) * toRate) * 100) / 100;
+  if (!fromRate || !toRate) return roundUpHalf(amount);
+  return roundUpHalf((amount / fromRate) * toRate);
 }
 
 const SYMBOLS: Record<string, string> = {
@@ -57,12 +59,13 @@ const SYMBOLS: Record<string, string> = {
   EUR: "€",
 };
 
-/** Formats a converted amount for display. */
+/** Formats a converted amount for display (always .00 or .50). */
 export function formatMoney(value: number, currency: string, locale = "en"): string {
   if (!Number.isFinite(value) || value <= 0) return "—";
   const symbol = SYMBOLS[currency];
-  const rounded = value >= 100 ? Math.round(value) : Math.round(value * 100) / 100;
+  const rounded = roundUpHalf(value);
   const amount = rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(2);
   void locale;
   return symbol ? `${symbol}${amount}` : `${amount} ${currency}`;
 }
+
