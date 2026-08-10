@@ -69,6 +69,9 @@ export function GeneratedRecipeCard({ recipe }: { recipe: GeneratedRecipe }) {
           <span className="min-w-0">{recipe.storeNote}</span>
         </Link>
       )}
+
+      <ProductRecommendations ingredients={recipe.ingredients} seed={recipe.title} />
     </article>
   );
 }
+
