@@ -114,8 +114,13 @@ export function RecipeCard({ recipe, index = 0 }: { recipe: Recipe; index?: numb
                 ))}
               </ol>
             </div>
+            <ProductRecommendations
+              ingredients={recipe.ingredients[lang]}
+              seed={recipe.id}
+            />
           </div>
         )}
+
       </div>
     </article>
   );
