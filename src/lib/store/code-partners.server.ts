@@ -1,11 +1,17 @@
 import { deriveTags, isBeautyProduct, pickString, toNumber, type SupplierProduct } from "./supplier-types";
 
 const DEFAULT_BASE = "https://api.cod.network/api/v2/seller";
+const MAX_PAGES = 60;
+
+type MarketplaceResponse = {
+  data?: Record<string, unknown>[];
+  meta?: { pagination?: { total_pages?: number } };
+};
 
 /**
- * Code Partners dropshipping catalog.
- * Tolerant parser: suppliers vary in envelope shape, so we accept
- * `{data: []}`, `{products: []}`, `{results: []}` or a bare array.
+ * Code Partners (COD Network) dropshipping marketplace catalog.
+ * Only products flagged as available for dropshipping are ingested,
+ * and the beauty/personal-care filter keeps the catalog on-brand.
  */
 export async function fetchCodePartnersProducts(): Promise<SupplierProduct[]> {
   const apiKey = process.env["CODE_PARTNERS_API_KEY"];
@@ -14,76 +20,62 @@ export async function fetchCodePartnersProducts(): Promise<SupplierProduct[]> {
   // The base secret sometimes holds a token by mistake; only trust real URLs.
   const base = (/^https?:\/\//.test(configured) ? configured : DEFAULT_BASE).replace(/\/+$/, "");
 
-
+  const headers = { Authorization: `Bearer ${apiKey}`, Accept: "application/json" };
   const out: SupplierProduct[] = [];
-  let page = 1;
+  const seen = new Set<string>();
+  let totalPages = MAX_PAGES;
 
-  while (page <= 20) {
-    const res = await fetch(`${base}/products?page=${page}&per_page=100`, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "X-API-KEY": apiKey,
-        Accept: "application/json",
-      },
-    });
-
+  for (let page = 1; page <= Math.min(totalPages, MAX_PAGES); page += 1) {
+    const res = await fetch(`${base}/marketplace/products?page=${page}&per_page=100`, { headers });
     if (!res.ok) {
       const body = await res.text();
-      throw new Error(`Code Partners request failed [${res.status}]: ${body.slice(0, 400)}`);
+      throw new Error(`Code Partners request failed [${res.status}]: ${body.slice(0, 300)}`);
     }
 
-    const payload: unknown = await res.json();
-    const items = extractList(payload);
+    const payload = (await res.json()) as MarketplaceResponse;
+    const items = payload.data ?? [];
+    totalPages = payload.meta?.pagination?.total_pages ?? totalPages;
     if (items.length === 0) break;
 
     for (const raw of items) {
       const product = normalize(raw);
-      if (product && isBeautyProduct(product)) out.push(product);
+      if (!product || seen.has(product.external_id)) continue;
+      if (!isBeautyProduct(product)) continue;
+      seen.add(product.external_id);
+      out.push(product);
     }
-
-    if (items.length < 100) break;
-    page += 1;
   }
 
   return out;
 }
 
-function extractList(payload: unknown): Record<string, unknown>[] {
-  if (Array.isArray(payload)) return payload as Record<string, unknown>[];
-  if (payload && typeof payload === "object") {
-    const rec = payload as Record<string, unknown>;
-    for (const key of ["data", "products", "results", "items"]) {
-      const value = rec[key];
-      if (Array.isArray(value)) return value as Record<string, unknown>[];
-      if (value && typeof value === "object") {
-        const nested = (value as Record<string, unknown>)["data"];
-        if (Array.isArray(nested)) return nested as Record<string, unknown>[];
-      }
-    }
-  }
-  return [];
+function stripHtml(value: string | null): string | null {
+  if (!value) return null;
+  const text = value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return text || null;
 }
 
 function normalize(raw: Record<string, unknown>): SupplierProduct | null {
-  const externalId = pickString(raw["id"], raw["sku"], raw["product_id"], raw["uuid"]);
-  const name = pickString(raw["name"], raw["title"], raw["product_name"]);
+  const externalId = pickString(raw["id"], raw["sku"], raw["slug"]);
+  const name = pickString(raw["name"], raw["title"]);
   if (!externalId || !name) return null;
+  if (raw["available_for_drop"] === false) return null;
 
-  const description = pickString(raw["description"], raw["short_description"], raw["details"]);
-  const category = pickString(raw["category"], raw["category_name"], raw["type"]);
-  const cost = toNumber(raw["cost"] ?? raw["price"] ?? raw["base_price"] ?? raw["wholesale_price"]);
+  const description = stripHtml(pickString(raw["description"], raw["short_description"]));
+  const category = pickString(raw["type"], raw["category"]);
+  const cost = toNumber(raw["price"] ?? raw["cost"]);
 
   return {
     source: "code",
     external_id: String(externalId),
     name,
     description,
-    image_url: pickString(raw["image"], raw["image_url"], raw["thumbnail"], (raw["images"] as unknown[])?.[0]),
-    currency: pickString(raw["currency"], raw["currency_code"]) ?? "SAR",
+    image_url: pickString(raw["image_url"], raw["path_image"], raw["image"]),
+    currency: pickString(raw["currency"], raw["currency_code"]) ?? "USD",
     base_cost: cost,
     category,
     tags: deriveTags(name, description, category),
-    url: pickString(raw["url"], raw["product_url"], raw["link"]),
-    in_stock: raw["in_stock"] !== false && toNumber(raw["quantity"] ?? 1) > 0,
+    url: pickString(raw["url"], raw["product_url"]),
+    in_stock: raw["inStock"] !== false,
   };
 }
