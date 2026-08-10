@@ -7,6 +7,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { storeAr, storeEn, storeEs, storeFr } from "./store-i18n";
+
 
 export type Lang = "ar" | "en" | "fr" | "es";
 
@@ -576,11 +578,12 @@ const viralEs: Dict = {
 };
 
 const DICTS: Record<Lang, Dict> = {
-  ar: { ...ar, ...extraAr, ...viralAr },
-  en: { ...en, ...extraEn, ...viralEn },
-  fr: { ...fr, ...extraFr, ...viralFr },
-  es: { ...es, ...extraEs, ...viralEs },
+  ar: { ...ar, ...extraAr, ...viralAr, ...storeAr },
+  en: { ...en, ...extraEn, ...viralEn, ...storeEn },
+  fr: { ...fr, ...extraFr, ...viralFr, ...storeFr },
+  es: { ...es, ...extraEs, ...viralEs, ...storeEs },
 };
+
 
 
 type I18nValue = {

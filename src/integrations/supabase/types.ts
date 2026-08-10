@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      customer_leads: {
+        Row: {
+          address: string
+          city: string
+          country: string | null
+          coupon_code: string | null
+          created_at: string
+          full_name: string
+          id: string
+          notes: string | null
+          notified: boolean
+          phone: string
+          product_id: string | null
+          product_name: string | null
+          product_price: string | null
+          quantity: number
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          address: string
+          city: string
+          country?: string | null
+          coupon_code?: string | null
+          created_at?: string
+          full_name: string
+          id?: string
+          notes?: string | null
+          notified?: boolean
+          phone: string
+          product_id?: string | null
+          product_name?: string | null
+          product_price?: string | null
+          quantity?: number
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          address?: string
+          city?: string
+          country?: string | null
+          coupon_code?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          notes?: string | null
+          notified?: boolean
+          phone?: string
+          product_id?: string | null
+          product_name?: string | null
+          product_price?: string | null
+          quantity?: number
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -119,6 +179,93 @@ export type Database = {
           id?: string
           recipe_id?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      store_products: {
+        Row: {
+          active: boolean
+          base_cost: number
+          category: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          external_id: string
+          id: string
+          image_url: string | null
+          in_stock: boolean
+          name: string
+          price: number
+          regions: string[]
+          source: string
+          tags: string[]
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          active?: boolean
+          base_cost?: number
+          category?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          external_id: string
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean
+          name: string
+          price?: number
+          regions?: string[]
+          source: string
+          tags?: string[]
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          active?: boolean
+          base_cost?: number
+          category?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          external_id?: string
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean
+          name?: string
+          price?: number
+          regions?: string[]
+          source?: string
+          tags?: string[]
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
+      store_sync_runs: {
+        Row: {
+          created_at: string
+          id: string
+          items_synced: number
+          message: string | null
+          ok: boolean
+          source: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          items_synced?: number
+          message?: string | null
+          ok?: boolean
+          source: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          items_synced?: number
+          message?: string | null
+          ok?: boolean
+          source?: string
         }
         Relationships: []
       }

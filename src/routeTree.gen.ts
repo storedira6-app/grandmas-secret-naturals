@@ -18,6 +18,7 @@ import { Route as AppDirectoryRouteImport } from './routes/app.directory'
 import { Route as AppQuizRouteImport } from './routes/app.quiz'
 import { Route as AppRecipesRouteImport } from './routes/app.recipes'
 import { Route as AppStoreRouteImport } from './routes/app.store'
+import { Route as ApiPublicStoreSyncRouteImport } from './routes/api/public/store-sync'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +65,11 @@ const AppStoreRoute = AppStoreRouteImport.update({
   path: '/store',
   getParentRoute: () => AppRoute,
 } as any)
+const ApiPublicStoreSyncRoute = ApiPublicStoreSyncRouteImport.update({
+  id: '/api/public/store-sync',
+  path: '/api/public/store-sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/app/recipes': typeof AppRecipesRoute
   '/app/store': typeof AppStoreRoute
   '/app/': typeof AppIndexRoute
+  '/api/public/store-sync': typeof ApiPublicStoreSyncRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/app/recipes': typeof AppRecipesRoute
   '/app/store': typeof AppStoreRoute
   '/app': typeof AppIndexRoute
+  '/api/public/store-sync': typeof ApiPublicStoreSyncRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/app/recipes': typeof AppRecipesRoute
   '/app/store': typeof AppStoreRoute
   '/app/': typeof AppIndexRoute
+  '/api/public/store-sync': typeof ApiPublicStoreSyncRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/app/recipes'
     | '/app/store'
     | '/app/'
+    | '/api/public/store-sync'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/app/recipes'
     | '/app/store'
     | '/app'
+    | '/api/public/store-sync'
   id:
     | '__root__'
     | '/'
@@ -131,11 +142,13 @@ export interface FileRouteTypes {
     | '/app/recipes'
     | '/app/store'
     | '/app/'
+    | '/api/public/store-sync'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  ApiPublicStoreSyncRoute: typeof ApiPublicStoreSyncRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -203,6 +216,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppStoreRouteImport
       parentRoute: typeof AppRoute
     }
+    '/api/public/store-sync': {
+      id: '/api/public/store-sync'
+      path: '/api/public/store-sync'
+      fullPath: '/api/public/store-sync'
+      preLoaderRoute: typeof ApiPublicStoreSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -231,17 +251,8 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  ApiPublicStoreSyncRoute: ApiPublicStoreSyncRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

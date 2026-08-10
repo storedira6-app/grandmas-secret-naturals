@@ -2,6 +2,8 @@ import { Clock, Leaf, ShoppingBag, Sparkles } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { GeneratedRecipe } from "@/lib/gemini.server";
 import { useI18n } from "@/lib/i18n";
+import { ProductRecommendations } from "@/components/store/ProductRecommendations";
+
 
 export function GeneratedRecipeCard({ recipe }: { recipe: GeneratedRecipe }) {
   const { t } = useI18n();
@@ -67,6 +69,9 @@ export function GeneratedRecipeCard({ recipe }: { recipe: GeneratedRecipe }) {
           <span className="min-w-0">{recipe.storeNote}</span>
         </Link>
       )}
+
+      <ProductRecommendations ingredients={recipe.ingredients} seed={recipe.title} />
     </article>
   );
 }
+
