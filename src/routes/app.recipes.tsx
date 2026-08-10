@@ -11,6 +11,7 @@ import {
   useRoutineHistory,
   useUpdateRoutineToday,
 } from "@/lib/user-data";
+import { localDayNumber, rotateDaily, useDayKey } from "@/lib/daily";
 
 export const Route = createFileRoute("/app/recipes")({
   head: () => ({
