@@ -129,14 +129,20 @@ function RecipesTab() {
       </section>
 
       <section className="space-y-4">
-        <div>
-          <h2 className="text-xl font-bold">{t("today")}</h2>
-          <p className="text-xs text-muted-foreground">{t("todaySub")}</p>
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+          <div className="min-w-0">
+            <h2 className="text-xl font-bold">{t("today")}</h2>
+            <p className="text-xs text-muted-foreground">{t("todaySub")}</p>
+          </div>
+          <span className="shrink-0 rounded-full bg-secondary px-2.5 py-1 text-[11px] font-semibold text-secondary-foreground">
+            {dayLabel}
+          </span>
         </div>
-        {RECIPES.map((r, i) => (
-          <RecipeCard key={r.id} recipe={r} index={i} />
+        {dailyRecipes.map((r, i) => (
+          <RecipeCard key={`${dayKey}-${r.id}`} recipe={r} index={i} />
         ))}
       </section>
+
     </div>
   );
 }
