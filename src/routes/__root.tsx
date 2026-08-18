@@ -82,6 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "google-site-verification", content: "n5Ktr6lKD0GIPg-sdx5F6tk570Zt2QIdCQzrbUXNhoc" },
       { title: "سر الجدة | Grandma's Secret — 100% Natural" },
       {
         name: "description",
