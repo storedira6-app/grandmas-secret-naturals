@@ -221,7 +221,7 @@ export default function ChatTab() {
           className="animate-float h-14 w-14 shrink-0 rounded-full object-cover ring-2 ring-gold/60"
         />
         <div className="min-w-0">
-          <p className="truncate text-sm font-bold">{t("navChat")}</p>
+          <h1 className="truncate text-sm font-bold">{t("navChat")}</h1>
           <p className="text-[11px] text-muted-foreground">🟢 online · 100% natural advice</p>
         </div>
       </div>

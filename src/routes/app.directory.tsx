@@ -197,7 +197,7 @@ function DirectoryTab() {
     <div className="space-y-4">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
         <div className="min-w-0">
-          <h2 className="truncate text-xl font-bold">{s.title}</h2>
+          <h1 className="truncate text-xl font-bold">{s.title}</h1>
           <p className="text-xs text-muted-foreground">{s.sub}</p>
         </div>
         <div className="glass-card flex shrink-0 gap-1 rounded-2xl p-1">

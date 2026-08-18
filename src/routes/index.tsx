@@ -56,7 +56,10 @@ function Welcome() {
           <div className="animate-float mx-auto grid h-14 w-14 place-items-center rounded-full glass-card">
             <Leaf className="h-6 w-6 text-primary" />
           </div>
-          <h1 className="text-4xl leading-tight font-bold text-foreground">{t("brand")}</h1>
+          <h1 className="text-4xl leading-tight font-bold text-foreground">
+            {t("brand")}
+            <span className="sr-only"> — 100% natural beauty rituals, recipes and remedies</span>
+          </h1>
           <p className="shimmer-text text-sm font-bold tracking-[0.25em] uppercase">
             {t("tagline")}
           </p>
