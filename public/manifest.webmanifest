@@ -1,0 +1,24 @@
+{
+  "name": "سر الجدة | Grandma's Secret",
+  "short_name": "سر الجدة",
+  "description": "وصفات ومكونات طبيعية 100% مع الجدة نورة — Natural beauty rituals, recipes and remedies.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f2419",
+  "theme_color": "#0f2419",
+  "dir": "auto",
+  "lang": "ar",
+  "categories": ["lifestyle", "beauty", "health"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "الجدة نورة", "short_name": "Chat", "url": "/app/chat" },
+    { "name": "وصفة اليوم", "short_name": "Recipes", "url": "/app/recipes" },
+    { "name": "المتجر", "short_name": "Store", "url": "/app/store" }
+  ]
+}
