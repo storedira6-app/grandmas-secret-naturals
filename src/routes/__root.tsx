@@ -15,6 +15,7 @@ import { I18nProvider } from "../lib/i18n";
 import { AuthProvider } from "../lib/auth";
 import { Toaster } from "../components/ui/sonner";
 import { GlowProvider } from "../lib/glow";
+import { InstallPrompt } from "../components/InstallPrompt";
 
 
 function NotFoundComponent() {
@@ -170,6 +171,7 @@ function RootComponent() {
           <GlowProvider>
             {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
             <Outlet />
+            <InstallPrompt />
             <Toaster position="top-center" />
           </GlowProvider>
         </I18nProvider>
