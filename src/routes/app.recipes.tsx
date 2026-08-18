@@ -100,6 +100,7 @@ function RecipesTab() {
 
   return (
     <div className="space-y-5">
+      <h1 className="text-xl font-bold">{t("today")}</h1>
       <section className="glass-card animate-rise space-y-3 rounded-3xl p-4">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
           <div className="min-w-0">
