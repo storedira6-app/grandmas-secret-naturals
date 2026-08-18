@@ -105,6 +105,32 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://grandmas-secret-naturals.lovable.app/#organization",
+              name: "Grandma's Secret — سر الجدة",
+              url: "https://grandmas-secret-naturals.lovable.app",
+              description:
+                "Natural beauty rituals, grandma's recipes, herbal remedies and a natural products store.",
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://grandmas-secret-naturals.lovable.app/#website",
+              name: "Grandma's Secret — سر الجدة",
+              url: "https://grandmas-secret-naturals.lovable.app",
+              inLanguage: ["ar", "en", "fr", "es"],
+              publisher: { "@id": "https://grandmas-secret-naturals.lovable.app/#organization" },
+            },
+          ],
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
