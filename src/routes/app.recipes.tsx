@@ -23,6 +23,33 @@ export const Route = createFileRoute("/app/recipes")({
       },
       { property: "og:title", content: "Trending natural recipes | سر الجدة" },
       { property: "og:description", content: "Daily natural beauty rituals with ingredients and steps." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://grandmas-secret-naturals.lovable.app/app/recipes" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://grandmas-secret-naturals.lovable.app/app/recipes" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Daily natural beauty rituals",
+          itemListElement: RECIPES.map((r, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            item: {
+              "@type": "Recipe",
+              name: r.title.en,
+              description: r.desc.en,
+              recipeCategory: `${r.tag.en} beauty ritual`,
+              totalTime: `PT${r.minutes}M`,
+              recipeIngredient: r.ingredients.en,
+              recipeInstructions: r.steps.en.map((s) => ({ "@type": "HowToStep", text: s })),
+            },
+          })),
+        }),
+      },
     ],
   }),
   component: RecipesTab,
