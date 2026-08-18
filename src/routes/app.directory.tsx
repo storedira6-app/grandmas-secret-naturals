@@ -41,7 +41,36 @@ export const Route = createFileRoute("/app/directory")({
         content: "Herbalists, hammams and oil distilleries recommended by the community.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://grandmas-secret-naturals.lovable.app/app/directory" },
       { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://grandmas-secret-naturals.lovable.app/app/directory" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Natural beauty directory",
+          itemListElement: COMMUNITY_PLACES.map((p, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            item: {
+              "@type": "LocalBusiness",
+              name: p.name.en,
+              description: p.note.en,
+              image: p.image,
+              telephone: p.phone,
+              address: { "@type": "PostalAddress", addressLocality: p.city.en },
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: p.rating,
+                reviewCount: p.reviews,
+              },
+            },
+          })),
+        }),
+      },
     ],
   }),
   component: DirectoryTab,

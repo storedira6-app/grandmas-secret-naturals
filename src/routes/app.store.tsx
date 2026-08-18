@@ -26,7 +26,35 @@ export const Route = createFileRoute("/app/store")({
         content: "Premium natural beauty products picked with love, delivered to your country.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://grandmas-secret-naturals.lovable.app/app/store" },
       { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://grandmas-secret-naturals.lovable.app/app/store" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Grandma's Secret natural products",
+          itemListElement: PRODUCTS.map((p, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            item: {
+              "@type": "Product",
+              name: p.name.en,
+              description: p.desc.en,
+              url: p.url,
+              offers: {
+                "@type": "Offer",
+                price: p.price.replace(/[^0-9.]/g, ""),
+                priceCurrency: "EUR",
+                availability: "https://schema.org/InStock",
+              },
+            },
+          })),
+        }),
+      },
     ],
   }),
   component: StoreTab,
