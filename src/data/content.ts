@@ -123,7 +123,7 @@ export const PRODUCTS: Product[] = [
     id: "argan",
     price: "€18",
     image: hydratorImg,
-    url: "https://shamsroyalmall.zid.store/",
+    url: "https://shamsroyalmall.zid.store/search?q=argan%20oil",
     badge: "trending",
     name: {
       ar: "زيت أرغان نقي",
@@ -142,7 +142,7 @@ export const PRODUCTS: Product[] = [
     id: "kit",
     price: "€39",
     image: storeImg,
-    url: "https://shamsroyalmall.zid.store/",
+    url: "https://shamsroyalmall.zid.store/search?q=natural%20kit",
     badge: "new",
     name: {
       ar: "طقم أسرار الجدة",
@@ -161,7 +161,7 @@ export const PRODUCTS: Product[] = [
     id: "clay",
     price: "€12",
     image: maskImg,
-    url: "https://shamsroyalmall.zid.store/",
+    url: "https://shamsroyalmall.zid.store/search?q=green%20clay",
     name: {
       ar: "طين أطلس الأخضر",
       en: "Atlas Green Clay",
@@ -179,7 +179,7 @@ export const PRODUCTS: Product[] = [
     id: "balm",
     price: "€22",
     image: nightImg,
-    url: "https://shamsroyalmall.zid.store/",
+    url: "https://shamsroyalmall.zid.store/search?q=lavender%20balm",
     name: {
       ar: "بلسم الليل بالخزامى",
       en: "Lavender Night Balm",
