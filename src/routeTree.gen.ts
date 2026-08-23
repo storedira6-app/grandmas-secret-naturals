@@ -18,6 +18,7 @@ import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppDirectoryRouteImport } from './routes/app.directory'
 import { Route as AppQuizRouteImport } from './routes/app.quiz'
 import { Route as AppRecipesRouteImport } from './routes/app.recipes'
+import { Route as AppSkinRouteImport } from './routes/app.skin'
 import { Route as AppStoreRouteImport } from './routes/app.store'
 import { Route as ApiPublicStoreSyncRouteImport } from './routes/api/public/store-sync'
 
@@ -66,6 +67,11 @@ const AppRecipesRoute = AppRecipesRouteImport.update({
   path: '/recipes',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSkinRoute = AppSkinRouteImport.update({
+  id: '/skin',
+  path: '/skin',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppStoreRoute = AppStoreRouteImport.update({
   id: '/store',
   path: '/store',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/app/directory': typeof AppDirectoryRoute
   '/app/quiz': typeof AppQuizRoute
   '/app/recipes': typeof AppRecipesRoute
+  '/app/skin': typeof AppSkinRoute
   '/app/store': typeof AppStoreRoute
   '/app/': typeof AppIndexRoute
   '/api/public/store-sync': typeof ApiPublicStoreSyncRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/app/directory': typeof AppDirectoryRoute
   '/app/quiz': typeof AppQuizRoute
   '/app/recipes': typeof AppRecipesRoute
+  '/app/skin': typeof AppSkinRoute
   '/app/store': typeof AppStoreRoute
   '/app': typeof AppIndexRoute
   '/api/public/store-sync': typeof ApiPublicStoreSyncRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/app/directory': typeof AppDirectoryRoute
   '/app/quiz': typeof AppQuizRoute
   '/app/recipes': typeof AppRecipesRoute
+  '/app/skin': typeof AppSkinRoute
   '/app/store': typeof AppStoreRoute
   '/app/': typeof AppIndexRoute
   '/api/public/store-sync': typeof ApiPublicStoreSyncRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/app/directory'
     | '/app/quiz'
     | '/app/recipes'
+    | '/app/skin'
     | '/app/store'
     | '/app/'
     | '/api/public/store-sync'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/app/directory'
     | '/app/quiz'
     | '/app/recipes'
+    | '/app/skin'
     | '/app/store'
     | '/app'
     | '/api/public/store-sync'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/app/directory'
     | '/app/quiz'
     | '/app/recipes'
+    | '/app/skin'
     | '/app/store'
     | '/app/'
     | '/api/public/store-sync'
@@ -229,6 +241,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRecipesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/skin': {
+      id: '/app/skin'
+      path: '/skin'
+      fullPath: '/app/skin'
+      preLoaderRoute: typeof AppSkinRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/store': {
       id: '/app/store'
       path: '/store'
@@ -252,6 +271,7 @@ interface AppRouteChildren {
   AppDirectoryRoute: typeof AppDirectoryRoute
   AppQuizRoute: typeof AppQuizRoute
   AppRecipesRoute: typeof AppRecipesRoute
+  AppSkinRoute: typeof AppSkinRoute
   AppStoreRoute: typeof AppStoreRoute
   AppIndexRoute: typeof AppIndexRoute
 }
@@ -262,6 +282,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDirectoryRoute: AppDirectoryRoute,
   AppQuizRoute: AppQuizRoute,
   AppRecipesRoute: AppRecipesRoute,
+  AppSkinRoute: AppSkinRoute,
   AppStoreRoute: AppStoreRoute,
   AppIndexRoute: AppIndexRoute,
 }
