@@ -182,6 +182,42 @@ export type Database = {
         }
         Relationships: []
       }
+      skin_analyses: {
+        Row: {
+          area: string
+          created_at: string
+          id: string
+          metrics: Json
+          report: Json
+          skin_type: string | null
+          summary: string | null
+          thumbnail: string | null
+          user_id: string
+        }
+        Insert: {
+          area: string
+          created_at?: string
+          id?: string
+          metrics?: Json
+          report?: Json
+          skin_type?: string | null
+          summary?: string | null
+          thumbnail?: string | null
+          user_id: string
+        }
+        Update: {
+          area?: string
+          created_at?: string
+          id?: string
+          metrics?: Json
+          report?: Json
+          skin_type?: string | null
+          summary?: string | null
+          thumbnail?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       store_products: {
         Row: {
           active: boolean
