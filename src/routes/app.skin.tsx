@@ -319,7 +319,13 @@ function SkinTab() {
   );
 }
 
-function ReportView({ report, previous }: { report: SkinReport; previous?: SavedRow }) {
+function ReportView({
+  report,
+  previous,
+}: {
+  report: SkinReport;
+  previous?: SavedRow | undefined;
+}) {
   const { t } = useI18n();
   const prevMetrics = new Map((previous?.metrics ?? []).map((m) => [m.key, m.score]));
 

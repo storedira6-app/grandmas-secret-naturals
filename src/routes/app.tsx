@@ -1,12 +1,10 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { Leaf, Flame } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { Leaf } from "lucide-react";
+import { useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { BottomNav } from "@/components/BottomNav";
 import { LeafParticles } from "@/components/LeafParticles";
-import { computeStreak, useRoutineHistory } from "@/lib/user-data";
-import { useReminderScheduler } from "@/lib/reminders";
 import { useDailyGlowBonus, useGlow } from "@/lib/glow";
 import { hideBanner, initAds, showBanner } from "@/lib/ads";
 
@@ -16,10 +14,7 @@ export const Route = createFileRoute("/app")({
 
 function AppLayout() {
   const { t } = useI18n();
-  const { data: history = [] } = useRoutineHistory();
-  const streak = useMemo(() => computeStreak(history), [history]);
   const { points } = useGlow();
-  useReminderScheduler();
   useDailyGlowBonus(t("glowDaily"));
 
   useEffect(() => {
@@ -53,10 +48,6 @@ function AppLayout() {
               className="flex items-center gap-1 rounded-full bg-gold/15 px-2.5 py-1 text-[11px] font-bold text-gold"
             >
               🌟 {points}
-            </span>
-            <span className="flex items-center gap-1 rounded-full bg-accent/60 px-2.5 py-1 text-[11px] font-bold text-accent-foreground">
-              <Flame className="h-3 w-3" />
-              {streak}
             </span>
             <LanguageSwitcher />
           </div>

@@ -1,11 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { MessageCircleHeart, Sparkles, CalendarHeart, ShoppingBag, MapPinned } from "lucide-react";
+import { MessageCircleHeart, Sparkles, Microscope, ShoppingBag, MapPinned } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
 const ITEMS = [
   { to: "/app/chat", key: "navChat", Icon: MessageCircleHeart },
   { to: "/app/recipes", key: "navRecipes", Icon: Sparkles },
-  { to: "/app/dashboard", key: "navRoutine", Icon: CalendarHeart },
+  { to: "/app/skin", key: "navSkin", Icon: Microscope },
   { to: "/app/store", key: "navStore", Icon: ShoppingBag },
   { to: "/app/directory", key: "navMap", Icon: MapPinned },
 ] as const;
