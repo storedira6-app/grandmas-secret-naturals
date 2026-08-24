@@ -130,19 +130,11 @@ export async function analyzeSkinWithGemini(opts: {
   const language = LANG_NAME[opts.lang] ?? "English";
   const area = AREA_LABEL[opts.area] ?? "skin";
 
-  const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
-    {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-goog-api-key": opts.apiKey.trim(),
-      },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [
-            {
-              text: `${GRANDMA_PERSONA(language)}
+  const body = JSON.stringify({
+    systemInstruction: {
+      parts: [
+        {
+          text: `${GRANDMA_PERSONA(language)}
 
 TASK — "Skin Microscope AI" cosmetic (non-medical) skin appearance analysis of the user's ${area} photo.
 
@@ -158,36 +150,56 @@ RULES
 - "precaution": Grandma's Precaution — always a patch test reminder.
 - "storeNote": a sweet one-line invite to grandma's picks in the Store tab, or an empty string.
 - Speak like a loving grandma, in ${language}.`,
-            },
-          ],
         },
-        contents: [
-          {
-            role: "user",
-            parts: [
-              {
-                text: `Please analyze my ${area} skin from this photo.${
-                  opts.lightingHint ? ` Capture conditions detected by the app: ${opts.lightingHint}.` : ""
-                }`,
-              },
-              { inlineData: { mimeType: opts.mimeType, data: opts.imageBase64 } },
-            ],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.6,
-          maxOutputTokens: 2200,
-          responseMimeType: "application/json",
-          responseSchema: RESPONSE_SCHEMA,
-        },
-      }),
+      ],
     },
-  );
+    contents: [
+      {
+        role: "user",
+        parts: [
+          {
+            text: `Please analyze my ${area} skin from this photo.${
+              opts.lightingHint ? ` Capture conditions detected by the app: ${opts.lightingHint}.` : ""
+            }`,
+          },
+          { inlineData: { mimeType: opts.mimeType, data: opts.imageBase64 } },
+        ],
+      },
+    ],
+    generationConfig: {
+      temperature: 0.6,
+      maxOutputTokens: 2200,
+      responseMimeType: "application/json",
+      responseSchema: RESPONSE_SCHEMA,
+    },
+  });
 
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Gemini skin request failed [${res.status}]: ${body}`);
+  // The vision model occasionally answers 429/503 under load — retry with bounded backoff.
+  let res: Response | null = null;
+  let lastError = "";
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    if (attempt > 0) await new Promise((r) => setTimeout(r, attempt * 2500));
+    const attemptRes = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-goog-api-key": opts.apiKey.trim(),
+        },
+        body,
+      },
+    );
+    if (attemptRes.ok) {
+      res = attemptRes;
+      break;
+    }
+    lastError = `Gemini skin request failed [${attemptRes.status}]: ${await attemptRes.text()}`;
+    if (attemptRes.status !== 429 && attemptRes.status < 500) break;
   }
+
+  if (!res) throw new Error(lastError || "Gemini skin request failed");
+
 
   const json = (await res.json()) as {
     candidates?: { content?: { parts?: { text?: string }[] } }[];

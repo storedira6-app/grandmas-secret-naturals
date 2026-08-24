@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Camera, Mic, Send, Square, Sparkles, ScanLine } from "lucide-react";
+import { Camera, Mic, Send, Square, Microscope, ScanLine } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import grandmaImg from "@/assets/grandma-noura.jpg";
@@ -237,11 +237,11 @@ export default function ChatTab() {
           <span className="truncate">{t("snapCta")}</span>
         </button>
         <Link
-          to="/app/quiz"
+          to="/app/skin"
           className="gradient-gold flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-xs font-bold text-gold-foreground transition-transform active:scale-95"
         >
-          <Sparkles className="h-4 w-4" />
-          <span className="truncate">{t("quizTitle")}</span>
+          <Microscope className="h-4 w-4" />
+          <span className="truncate">{t("navSkin")}</span>
         </Link>
       </div>
       <input
