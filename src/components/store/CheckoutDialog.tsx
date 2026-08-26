@@ -6,6 +6,7 @@ import { submitLead } from "@/lib/store.functions";
 import { useGlow } from "@/lib/glow";
 import { EGYPT_COUPON_CODE } from "@/lib/store/pricing";
 import { useCurrency } from "@/lib/store-client";
+import { purchaseRewardPoints, recordPurchase } from "@/lib/loyalty";
 
 export type CheckoutItem = {
   id: string | null;
@@ -59,7 +60,11 @@ export function CheckoutDialog({
     try {
       await submitLead({ data: payload });
       toast.success(t("orderSuccess"));
-      award(10, t("orderSuccess"));
+      recordPurchase();
+      award(
+        10 + purchaseRewardPoints(item.amount * quantity, item.currency),
+        t("walletPurchasePoints"),
+      );
       onClose();
     } catch (error) {
       console.error(error);

@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { storeAr, storeEn, storeEs, storeFr } from "./store-i18n";
+import { loyaltyAr, loyaltyEn, loyaltyEs, loyaltyFr } from "./loyalty-i18n";
 
 
 export type Lang = "ar" | "en" | "fr" | "es";
@@ -760,10 +761,10 @@ const skinEs: Dict = {
 };
 
 const DICTS: Record<Lang, Dict> = {
-  ar: { ...ar, ...extraAr, ...viralAr, ...storeAr, ...skinAr },
-  en: { ...en, ...extraEn, ...viralEn, ...storeEn, ...skinEn },
-  fr: { ...fr, ...extraFr, ...viralFr, ...storeFr, ...skinFr },
-  es: { ...es, ...extraEs, ...viralEs, ...storeEs, ...skinEs },
+  ar: { ...ar, ...extraAr, ...viralAr, ...storeAr, ...skinAr, ...loyaltyAr },
+  en: { ...en, ...extraEn, ...viralEn, ...storeEn, ...skinEn, ...loyaltyEn },
+  fr: { ...fr, ...extraFr, ...viralFr, ...storeFr, ...skinFr, ...loyaltyFr },
+  es: { ...es, ...extraEs, ...viralEs, ...storeEs, ...skinEs, ...loyaltyEs },
 };
 
 

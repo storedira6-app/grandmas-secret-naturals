@@ -19,6 +19,7 @@ import { Route as AppQuizRouteImport } from './routes/app.quiz'
 import { Route as AppRecipesRouteImport } from './routes/app.recipes'
 import { Route as AppSkinRouteImport } from './routes/app.skin'
 import { Route as AppStoreRouteImport } from './routes/app.store'
+import { Route as AppWalletRouteImport } from './routes/app.wallet'
 import { Route as ApiPublicStoreSyncRouteImport } from './routes/api/public/store-sync'
 
 const IndexRoute = IndexRouteImport.update({
@@ -71,6 +72,11 @@ const AppStoreRoute = AppStoreRouteImport.update({
   path: '/store',
   getParentRoute: () => AppRoute,
 } as any)
+const AppWalletRoute = AppWalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => AppRoute,
+} as any)
 const ApiPublicStoreSyncRoute = ApiPublicStoreSyncRouteImport.update({
   id: '/api/public/store-sync',
   path: '/api/public/store-sync',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/app/recipes': typeof AppRecipesRoute
   '/app/skin': typeof AppSkinRoute
   '/app/store': typeof AppStoreRoute
+  '/app/wallet': typeof AppWalletRoute
   '/app/': typeof AppIndexRoute
   '/api/public/store-sync': typeof ApiPublicStoreSyncRoute
 }
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/app/recipes': typeof AppRecipesRoute
   '/app/skin': typeof AppSkinRoute
   '/app/store': typeof AppStoreRoute
+  '/app/wallet': typeof AppWalletRoute
   '/app': typeof AppIndexRoute
   '/api/public/store-sync': typeof ApiPublicStoreSyncRoute
 }
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/app/recipes': typeof AppRecipesRoute
   '/app/skin': typeof AppSkinRoute
   '/app/store': typeof AppStoreRoute
+  '/app/wallet': typeof AppWalletRoute
   '/app/': typeof AppIndexRoute
   '/api/public/store-sync': typeof ApiPublicStoreSyncRoute
 }
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/app/recipes'
     | '/app/skin'
     | '/app/store'
+    | '/app/wallet'
     | '/app/'
     | '/api/public/store-sync'
   fileRoutesByTo: FileRoutesByTo
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/app/recipes'
     | '/app/skin'
     | '/app/store'
+    | '/app/wallet'
     | '/app'
     | '/api/public/store-sync'
   id:
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/app/recipes'
     | '/app/skin'
     | '/app/store'
+    | '/app/wallet'
     | '/app/'
     | '/api/public/store-sync'
   fileRoutesById: FileRoutesById
@@ -236,6 +248,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppStoreRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/wallet': {
+      id: '/app/wallet'
+      path: '/wallet'
+      fullPath: '/app/wallet'
+      preLoaderRoute: typeof AppWalletRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/api/public/store-sync': {
       id: '/api/public/store-sync'
       path: '/api/public/store-sync'
@@ -253,6 +272,7 @@ interface AppRouteChildren {
   AppRecipesRoute: typeof AppRecipesRoute
   AppSkinRoute: typeof AppSkinRoute
   AppStoreRoute: typeof AppStoreRoute
+  AppWalletRoute: typeof AppWalletRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
@@ -263,6 +283,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppRecipesRoute: AppRecipesRoute,
   AppSkinRoute: AppSkinRoute,
   AppStoreRoute: AppStoreRoute,
+  AppWalletRoute: AppWalletRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
