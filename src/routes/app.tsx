@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { Leaf, Gift } from "lucide-react";
 import { useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
@@ -8,7 +8,6 @@ import { LeafParticles } from "@/components/LeafParticles";
 import { useDailyGlowBonus, useGlow } from "@/lib/glow";
 import { hideBanner, initAds, showBanner } from "@/lib/ads";
 import { SmartHeroBanner } from "@/components/SmartHeroBanner";
-import { Link } from "@tanstack/react-router";
 import { maybeSendDay2Reminder } from "@/lib/push";
 import { ensureLifecycle } from "@/lib/loyalty";
 
