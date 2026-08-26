@@ -16,6 +16,7 @@ import { AuthProvider } from "../lib/auth";
 import { Toaster } from "../components/ui/sonner";
 import { GlowProvider } from "../lib/glow";
 import { InstallPrompt } from "../components/InstallPrompt";
+import { LegalConsentModal } from "../components/LegalConsentModal";
 
 
 function NotFoundComponent() {
@@ -177,6 +178,7 @@ function RootComponent() {
             {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
             <Outlet />
             <InstallPrompt />
+            <LegalConsentModal />
             <Toaster position="top-center" />
           </GlowProvider>
         </I18nProvider>
