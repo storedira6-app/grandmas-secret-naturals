@@ -34,6 +34,10 @@ export const storeAr: Dict = {
   yourCountry: "بلدك",
   syncCatalog: "تحديث المنتجات",
   syncDone: "تم تحديث المنتجات",
+  globalMarket: "متجر الجمال العالمي",
+  globalMarketSub: "أفضل البراندات العالمية الطبيعية — تسوقي مباشرة",
+  globalSuggest: "تسوقيها من متجر الجمال العالمي",
+  shopNow: "تسوقي الآن",
 };
 
 export const storeEn: Dict = {
@@ -70,6 +74,10 @@ export const storeEn: Dict = {
   yourCountry: "Your country",
   syncCatalog: "Refresh catalog",
   syncDone: "Catalog updated",
+  globalMarket: "Global Beauty Market",
+  globalMarketSub: "Handpicked international clean-beauty brands — shop direct",
+  globalSuggest: "Shop it from the Global Beauty Market",
+  shopNow: "Shop now",
 };
 
 export const storeFr: Dict = {
@@ -106,6 +114,10 @@ export const storeFr: Dict = {
   yourCountry: "Votre pays",
   syncCatalog: "Actualiser le catalogue",
   syncDone: "Catalogue mis à jour",
+  globalMarket: "Marché beauté mondial",
+  globalMarketSub: "Marques internationales de beauté propre — achetez direct",
+  globalSuggest: "Achetez-le sur le Marché beauté mondial",
+  shopNow: "Acheter",
 };
 
 export const storeEs: Dict = {
@@ -142,4 +154,8 @@ export const storeEs: Dict = {
   yourCountry: "Tu país",
   syncCatalog: "Actualizar catálogo",
   syncDone: "Catálogo actualizado",
+  globalMarket: "Mercado global de belleza",
+  globalMarketSub: "Marcas internacionales de belleza limpia — compra directa",
+  globalSuggest: "Cómpralo en el Mercado global de belleza",
+  shopNow: "Comprar ahora",
 };
