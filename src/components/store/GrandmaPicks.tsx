@@ -6,6 +6,7 @@ import { noonLinkFor } from "@/data/noon";
 import { useCatalog, useCountry, useCurrency, recommendForIngredients } from "@/lib/store-client";
 import { useBeautyProfile, profileKeywords } from "@/lib/store/beauty-profile";
 import { CheckoutDialog, type CheckoutItem } from "./CheckoutDialog";
+import { GlobalBrandSuggestions } from "./GlobalBrandMarket";
 
 /**
  * Featured spotlight: Grandma's Recommendations personalized to the visitor's
@@ -26,7 +27,7 @@ export function GrandmaPicks() {
     seed: `picks-${profile?.updatedAt ?? "guest"}`,
     limit: 4,
   });
-  if (picks.length === 0) return null;
+
 
   return (
     <section className="animate-rise space-y-3 rounded-3xl border border-gold/40 bg-gold/5 p-3">
@@ -49,6 +50,8 @@ export function GrandmaPicks() {
           </Link>
         )}
       </header>
+
+      <GlobalBrandSuggestions keywords={keywords} seed={`picks-${profile?.skin ?? "guest"}`} />
 
       <div className="grid grid-cols-2 gap-3">
         {picks.map((pick, i) => {

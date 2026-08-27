@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import { noonLinkFor } from "@/data/noon";
 import { useCatalog, useCountry, useCurrency, recommendForIngredients } from "@/lib/store-client";
 import { CheckoutDialog, type CheckoutItem } from "./CheckoutDialog";
+import { GlobalBrandSuggestions } from "./GlobalBrandMarket";
 
 /** Smart in-recipe product recommendations matched to the recipe ingredients. */
 export function ProductRecommendations({
@@ -20,7 +21,6 @@ export function ProductRecommendations({
   const [checkout, setCheckout] = useState<CheckoutItem | null>(null);
 
   const picks = recommendForIngredients(ingredients, { catalog, noon, seed, limit: 2 });
-  if (picks.length === 0) return null;
 
   return (
     <section className="space-y-2 rounded-2xl border border-gold/30 bg-gold/5 p-3">
@@ -31,6 +31,8 @@ export function ProductRecommendations({
         </p>
         <p className="text-[11px] text-muted-foreground">{t("recommendedSub")}</p>
       </div>
+
+      <GlobalBrandSuggestions keywords={ingredients} {...(seed ? { seed } : {})} />
 
       <div className="grid grid-cols-2 gap-2">
         {picks.map((pick) => {
