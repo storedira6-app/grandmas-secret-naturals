@@ -3,20 +3,25 @@ import { useI18n } from "@/lib/i18n";
 import { GLOBAL_BRANDS, brandLogo, matchGlobalBrands, type GlobalBrand } from "@/data/global-brands";
 
 function BrandLogo({ brand, className }: { brand: GlobalBrand; className?: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <span className="gradient-forest grid h-full w-full place-items-center text-[11px] font-bold text-primary-foreground">
+        {brand.brand.slice(0, 2).toUpperCase()}
+      </span>
+    );
+  }
   return (
     <img
       src={brandLogo(brand)}
       alt={brand.brand}
       loading="lazy"
       className={className}
-      onError={(e) => {
-        const el = e.currentTarget;
-        el.style.display = "none";
-        el.parentElement?.classList.add("gradient-forest");
-      }}
+      onError={() => setFailed(true)}
     />
   );
 }
+
 
 /** Full "Global Beauty Market" partner grid shown on the store tab. */
 export function GlobalBrandMarket() {
