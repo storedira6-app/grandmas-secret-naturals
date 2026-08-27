@@ -10,6 +10,7 @@ import { useCatalog, useCountry, useCurrency } from "@/lib/store-client";
 import { CheckoutDialog, type CheckoutItem } from "@/components/store/CheckoutDialog";
 import { GrandmaPicks } from "@/components/store/GrandmaPicks";
 import { CurrencySwitcher } from "@/components/store/CurrencySwitcher";
+import { GlobalBrandMarket } from "@/components/store/GlobalBrandMarket";
 
 export const Route = createFileRoute("/app/store")({
   head: () => ({
@@ -88,11 +89,13 @@ function StoreTab() {
     <div className="space-y-5">
       <header className="animate-rise flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="text-xl font-bold">{t("storeHero")}</h1>
+          <h1 className="text-xl font-bold">{t("globalMarket")}</h1>
           <p className="text-xs text-muted-foreground">{t("storeHeroSub")}</p>
         </div>
         <CurrencySwitcher />
       </header>
+
+      <GlobalBrandMarket />
 
       <GrandmaPicks />
 
