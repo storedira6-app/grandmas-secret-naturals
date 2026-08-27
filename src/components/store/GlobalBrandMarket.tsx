@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Globe, ShoppingBag } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { GLOBAL_BRANDS, brandLogo, matchGlobalBrands, type GlobalBrand } from "@/data/global-brands";
