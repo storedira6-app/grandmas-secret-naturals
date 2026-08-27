@@ -38,6 +38,7 @@ export const storeAr: Dict = {
   globalMarketSub: "أفضل البراندات العالمية الطبيعية — تسوقي مباشرة",
   globalSuggest: "تسوقيها من متجر الجمال العالمي",
   shopNow: "تسوقي الآن",
+  skinShop: "علاجات مقترحة من متجر الجمال العالمي",
 };
 
 export const storeEn: Dict = {
@@ -78,6 +79,7 @@ export const storeEn: Dict = {
   globalMarketSub: "Handpicked international clean-beauty brands — shop direct",
   globalSuggest: "Shop it from the Global Beauty Market",
   shopNow: "Shop now",
+  skinShop: "Suggested treatments from the Global Beauty Market",
 };
 
 export const storeFr: Dict = {
@@ -118,6 +120,7 @@ export const storeFr: Dict = {
   globalMarketSub: "Marques internationales de beauté propre — achetez direct",
   globalSuggest: "Achetez-le sur le Marché beauté mondial",
   shopNow: "Acheter",
+  skinShop: "Traitements suggérés du Marché beauté mondial",
 };
 
 export const storeEs: Dict = {
@@ -158,4 +161,5 @@ export const storeEs: Dict = {
   globalMarketSub: "Marcas internacionales de belleza limpia — compra directa",
   globalSuggest: "Cómpralo en el Mercado global de belleza",
   shopNow: "Comprar ahora",
+  skinShop: "Tratamientos sugeridos del Mercado global de belleza",
 };

@@ -24,6 +24,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { analyzeSkin } from "@/lib/skin.functions";
 import { preparePhoto, type PreparedPhoto } from "@/lib/image-quality";
 import { ProductRecommendations } from "@/components/store/ProductRecommendations";
+import { GlobalBrandSuggestions } from "@/components/store/GlobalBrandMarket";
 import { showInterstitial } from "@/lib/ads";
 import type { SkinMetric, SkinReport } from "@/lib/skin.server";
 
@@ -404,6 +405,20 @@ function ReportView({
           {report.summary}
         </section>
       )}
+
+      <section className="glass-card space-y-2 rounded-3xl p-4">
+        <p className="text-sm font-bold">{t("skinShop")}</p>
+        <GlobalBrandSuggestions
+          keywords={[
+            report.skinType,
+            ...report.concerns.flatMap((c) => [c.title, c.detail]),
+            ...report.metrics.filter((m) => m.score < 60).map((m) => `${m.key} ${m.label}`),
+            ...report.recipeIngredients,
+          ]}
+          seed={report.recipeTitle || report.skinType}
+          limit={3}
+        />
+      </section>
 
       <RoutineList title={t("skinMorning")} Icon={Sun} steps={report.morning} />
       <RoutineList title={t("skinEvening")} Icon={Moon} steps={report.evening} />
