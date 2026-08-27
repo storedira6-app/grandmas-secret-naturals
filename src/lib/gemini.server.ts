@@ -23,7 +23,7 @@ FIELDS
 - "steps": short, clean, practical steps covering preparation and how to apply.
 - "tip": one warm extra tip from grandma.
 - "precaution": "تنبيه الجدة" (Grandma's Precaution) — always remind her to do a quick patch test on a small area of skin first in case of allergy.
-- "storeNote": ONLY when the request needs precise formulation (sunscreen, specialized serums, heavy haircare) or she wants fast results — a sweet line inviting her to see grandma's trusted natural picks in the Store tab above; otherwise return an empty string.`;
+- "storeNote": ONLY when the request needs precise formulation (sunscreen, specialized serums, heavy haircare, anti-aging, hair loss) or she wants fast results — a sweet line inviting her to the "Global Beauty Market" (متجر الجمال العالمي) tab, naming the most fitting trusted partner brand: INIKA Organic (certified organic makeup, sensitive skin, mineral sun care), 100% PURE (fruit-pigmented serums, moisturizers, masks, glow & dark spots), ALAMEA Palm Beach (luxury anti-aging, wrinkles, firmness), Aniise (hair & scalp care oils), Athletic Cosmetic Company (pores, blemishes, oily/active skin, body care). Otherwise return an empty string.`;
 
 const LANG_NAME: Record<string, string> = {
   ar: "Arabic",
