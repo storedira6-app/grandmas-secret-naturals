@@ -1,12 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, ExternalLink, Sparkles, RotateCcw } from "lucide-react";
+import { ArrowLeft, Sparkles, RotateCcw } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { useGlow } from "@/lib/glow";
 import { GeneratedRecipeCard } from "@/components/GeneratedRecipeCard";
 import { QUIZ_RECIPES, type QuizGoal } from "@/data/quiz-recipes";
-import { AFFILIATE_PRODUCTS } from "@/data/affiliate";
-import { useCurrency } from "@/lib/store-client";
+import { GlobalBrandSuggestions } from "@/components/store/GlobalBrandMarket";
 import { saveBeautyProfile } from "@/lib/store/beauty-profile";
 
 export const Route = createFileRoute("/app/quiz")({
@@ -36,7 +35,6 @@ const GOALS: QuizGoal[] = ["glow", "bright", "hydrate"];
 function QuizTab() {
   const { t, lang } = useI18n();
   const { award } = useGlow();
-  const { displayLabel } = useCurrency();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
 
@@ -123,37 +121,9 @@ function QuizTab() {
 
           <section className="glass-card space-y-3 rounded-3xl p-4">
             <h3 className="text-sm leading-snug font-bold">{t("affiliateTitle")}</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {AFFILIATE_PRODUCTS.map((p) => (
-                <article key={p.id} className="overflow-hidden rounded-2xl bg-secondary/50">
-                  <img
-                    src={p.image}
-                    alt={p.name[lang]}
-                    loading="lazy"
-                    width={800}
-                    height={800}
-                    className="h-28 w-full object-cover"
-                  />
-                  <div className="space-y-1.5 p-2.5">
-                    <p className="line-clamp-2 text-xs font-bold">{p.name[lang]}</p>
-                    <p className="line-clamp-2 text-[10px] leading-tight text-muted-foreground">
-                      {p.note[lang]}
-                    </p>
-                    <p className="text-xs font-bold text-gold">{displayLabel(p.price)}</p>
-                    <a
-                      href={p.url}
-                      target="_blank"
-                      rel="noopener noreferrer sponsored"
-                      className="gradient-gold animate-glow flex items-center justify-center gap-1 rounded-xl py-2 text-[11px] font-bold text-gold-foreground transition-transform active:scale-95"
-                    >
-                      {t("buyOriginal")}
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  </div>
-                </article>
-              ))}
-            </div>
+            <GlobalBrandSuggestions keywords={recipe.ingredients} seed={`quiz-${goal}`} limit={3} />
           </section>
+
 
           <div className="flex gap-2">
             <button

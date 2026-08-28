@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Camera, Mic, Send, Square, Microscope, ScanLine } from "lucide-react";
+import { Camera, Mic, Send, Square, ScanLine } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import grandmaImg from "@/assets/grandma-noura.jpg";
@@ -226,7 +226,7 @@ export default function ChatTab() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2">
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
@@ -236,13 +236,6 @@ export default function ChatTab() {
           <Camera className="h-4 w-4" />
           <span className="truncate">{t("snapCta")}</span>
         </button>
-        <Link
-          to="/app/skin"
-          className="gradient-gold flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-xs font-bold text-gold-foreground transition-transform active:scale-95"
-        >
-          <Microscope className="h-4 w-4" />
-          <span className="truncate">{t("navSkin")}</span>
-        </Link>
       </div>
       <input
         ref={fileRef}
