@@ -35,7 +35,6 @@ const GOALS: QuizGoal[] = ["glow", "bright", "hydrate"];
 function QuizTab() {
   const { t, lang } = useI18n();
   const { award } = useGlow();
-  const { displayLabel } = useCurrency();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
 
