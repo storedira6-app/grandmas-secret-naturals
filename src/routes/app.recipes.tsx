@@ -72,8 +72,10 @@ function RecipesTab() {
 
   // Re-computes automatically when the local calendar day flips.
   const dayKey = useDayKey();
+  // 3 fresh recipes every day — the set shifts by 3 so today never repeats yesterday.
   const dailyRecipes = useMemo(
-    () => rotateDaily(RECIPES, localDayNumber(new Date(`${dayKey}T00:00:00`))),
+    () =>
+      rotateDaily(RECIPES, localDayNumber(new Date(`${dayKey}T00:00:00`)) * 3).slice(0, 3),
     [dayKey],
   );
   const dayLabel = useMemo(
