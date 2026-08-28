@@ -1,12 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, ExternalLink, Sparkles, RotateCcw } from "lucide-react";
+import { ArrowLeft, Sparkles, RotateCcw } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { useGlow } from "@/lib/glow";
 import { GeneratedRecipeCard } from "@/components/GeneratedRecipeCard";
 import { QUIZ_RECIPES, type QuizGoal } from "@/data/quiz-recipes";
-import { AFFILIATE_PRODUCTS } from "@/data/affiliate";
-import { useCurrency } from "@/lib/store-client";
+import { GlobalBrandSuggestions } from "@/components/store/GlobalBrandMarket";
 import { saveBeautyProfile } from "@/lib/store/beauty-profile";
 
 export const Route = createFileRoute("/app/quiz")({
