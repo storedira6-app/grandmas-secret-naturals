@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Camera, Mic, Send, Square, Microscope, ScanLine } from "lucide-react";
+import { Camera, Mic, Send, Square, ScanLine } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import grandmaImg from "@/assets/grandma-noura.jpg";
