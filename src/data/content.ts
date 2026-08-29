@@ -1,6 +1,15 @@
 import maskImg from "@/assets/recipe-mask.jpg";
 import hydratorImg from "@/assets/recipe-hydrator.jpg";
 import nightImg from "@/assets/recipe-night.jpg";
+import honeyOatImg from "@/assets/recipe-honey-oat.jpg";
+import greenTeaImg from "@/assets/recipe-green-tea.jpg";
+import coconutHairImg from "@/assets/recipe-coconut-hair.jpg";
+import turmericImg from "@/assets/recipe-turmeric.jpg";
+import cucumberImg from "@/assets/recipe-cucumber-eyes.jpg";
+import coffeeImg from "@/assets/recipe-coffee-body.jpg";
+import chamomileImg from "@/assets/recipe-chamomile.jpg";
+import aloeImg from "@/assets/recipe-aloe-night.jpg";
+import lemonImg from "@/assets/recipe-lemon-hands.jpg";
 import storeImg from "@/assets/store-products.jpg";
 import type { Lang } from "@/lib/i18n";
 
@@ -108,7 +117,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: "honey-oat-scrub",
-    image: maskImg,
+    image: honeyOatImg,
     minutes: 8,
     tag: { ar: "صباحي", en: "Morning", fr: "Matin", es: "Mañana" },
     title: {
@@ -138,7 +147,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: "green-tea-tonic",
-    image: hydratorImg,
+    image: greenTeaImg,
     minutes: 6,
     tag: { ar: "نهاري", en: "Day", fr: "Jour", es: "Día" },
     title: {
@@ -168,7 +177,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: "coconut-hair-mask",
-    image: nightImg,
+    image: coconutHairImg,
     minutes: 20,
     tag: { ar: "شعر", en: "Hair", fr: "Cheveux", es: "Cabello" },
     title: {
@@ -198,7 +207,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: "turmeric-glow",
-    image: maskImg,
+    image: turmericImg,
     minutes: 12,
     tag: { ar: "نضارة", en: "Glow", fr: "Éclat", es: "Brillo" },
     title: {
@@ -228,7 +237,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: "cucumber-eyes",
-    image: hydratorImg,
+    image: cucumberImg,
     minutes: 10,
     tag: { ar: "عيون", en: "Eyes", fr: "Yeux", es: "Ojos" },
     title: {
@@ -258,7 +267,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: "coffee-body",
-    image: nightImg,
+    image: coffeeImg,
     minutes: 15,
     tag: { ar: "جسم", en: "Body", fr: "Corps", es: "Cuerpo" },
     title: {
@@ -288,7 +297,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: "chamomile-calm",
-    image: maskImg,
+    image: chamomileImg,
     minutes: 10,
     tag: { ar: "تهدئة", en: "Calm", fr: "Apaisant", es: "Calma" },
     title: {
@@ -318,7 +327,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: "aloe-night-gel",
-    image: hydratorImg,
+    image: aloeImg,
     minutes: 7,
     tag: { ar: "ليلي", en: "Night", fr: "Nuit", es: "Noche" },
     title: {
@@ -348,7 +357,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: "lemon-hands",
-    image: nightImg,
+    image: lemonImg,
     minutes: 9,
     tag: { ar: "يدين", en: "Hands", fr: "Mains", es: "Manos" },
     title: {
