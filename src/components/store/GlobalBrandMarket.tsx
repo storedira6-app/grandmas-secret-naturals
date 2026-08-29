@@ -1,27 +1,37 @@
 import { useState } from "react";
 import { Globe, ShoppingBag } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import { GLOBAL_BRANDS, brandLogo, matchGlobalBrands, type GlobalBrand } from "@/data/global-brands";
+import {
+  GLOBAL_BRANDS,
+  brandLogoSources,
+  matchGlobalBrands,
+  type GlobalBrand,
+} from "@/data/global-brands";
 
 function BrandLogo({ brand, className }: { brand: GlobalBrand; className?: string }) {
-  const [failed, setFailed] = useState(false);
-  if (failed) {
+  const sources = brandLogoSources(brand);
+  const [index, setIndex] = useState(0);
+  const src = sources[index];
+
+  if (!src) {
     return (
       <span className="gradient-forest grid h-full w-full place-items-center text-[11px] font-bold text-primary-foreground">
         {brand.brand.slice(0, 2).toUpperCase()}
       </span>
     );
   }
+
   return (
     <img
-      src={brandLogo(brand)}
-      alt={brand.brand}
+      src={src}
+      alt={`${brand.brand} logo`}
       loading="lazy"
       className={className}
-      onError={() => setFailed(true)}
+      onError={() => setIndex((i) => i + 1)}
     />
   );
 }
+
 
 
 /** Full "Global Beauty Market" partner grid shown on the store tab. */
