@@ -47,53 +47,65 @@ const RESPONSE_SCHEMA = {
   required: ["greeting", "title", "minutes", "ingredients", "steps", "tip", "precaution", "storeNote"],
 };
 
+/** Fast models tried in order — a busy model falls back instead of failing. */
+const MODELS = ["gemini-flash-latest", "gemini-2.5-flash-lite", "gemini-2.0-flash"];
+
 export async function generateRecipeWithGemini(opts: {
   apiKey: string;
   ingredients: string;
   lang: string;
 }): Promise<GeneratedRecipe> {
   const language = LANG_NAME[opts.lang] ?? "English";
-  const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
-    {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-goog-api-key": opts.apiKey.trim(),
-      },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [
-            {
-              text: GRANDMA_PERSONA(language),
-            },
-          ],
-        },
-        contents: [
+  const payload = JSON.stringify({
+    systemInstruction: { parts: [{ text: GRANDMA_PERSONA(language) }] },
+    contents: [
+      {
+        role: "user",
+        parts: [
           {
-            role: "user",
-            parts: [
-              {
-                text: `Create one natural beauty/wellbeing recipe based on this request or these ingredients: "${opts.ingredients}".`,
-              },
-            ],
+            text: `Create one natural beauty/wellbeing recipe based on this request or these ingredients: "${opts.ingredients}".`,
           },
         ],
-        generationConfig: {
-          temperature: 0.8,
-          maxOutputTokens: 1200,
-          responseMimeType: "application/json",
-          responseSchema: RESPONSE_SCHEMA,
-          thinkingConfig: { thinkingBudget: 0 },
-        },
-      }),
+      },
+    ],
+    generationConfig: {
+      temperature: 0.8,
+      maxOutputTokens: 1200,
+      responseMimeType: "application/json",
+      responseSchema: RESPONSE_SCHEMA,
+      thinkingConfig: { thinkingBudget: 0 },
     },
-  );
+  });
 
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Gemini request failed [${res.status}]: ${body}`);
+  let res: Response | null = null;
+  let lastError = "";
+  for (const model of MODELS) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const r = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            "x-goog-api-key": opts.apiKey.trim(),
+          },
+          body: payload,
+        },
+      );
+      if (r.ok) {
+        res = r;
+        break;
+      }
+      lastError = `[${r.status}] ${await r.text()}`;
+      // Only transient overload/rate-limit errors are worth retrying.
+      if (r.status !== 503 && r.status !== 429) break;
+      await new Promise((resolve) => setTimeout(resolve, 600 * (attempt + 1)));
+    }
+    if (res) break;
   }
+
+  if (!res) throw new Error(`Gemini request failed ${lastError}`);
+
 
   const json = (await res.json()) as {
     candidates?: { content?: { parts?: { text?: string }[] } }[];
