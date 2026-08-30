@@ -59,6 +59,12 @@ export const loyaltyAr: Dict = {
   walletEarnUse: "الاستخدام اليومي، الوصفات، وتحليل البشرة",
   walletTerms: "شروط وأحكام الجوائز",
   walletPurchasePoints: "نقاط من مشترياتك 🌟",
+  walletReferTitle: "ادعي صاحبتك واكسبي 🌟",
+  walletReferSub: "200 نقطة لك و100 لصاحبتك عند التسجيل من رابطك.",
+  walletReferCopy: "نسخ رابط الإحالة",
+  walletReferCopied: "تم نسخ الرابط، شاركيه دلوقتي 💚",
+  walletReferShare: "مشاركة الرابط",
+  walletReferWelcome: "أهلاً بك! حصلتِ على 100 نقطة هدية الإحالة 🌟",
 
   pushTitle: "الجدة نورة",
   pushBody:
@@ -125,6 +131,12 @@ export const loyaltyEn: Dict = {
   walletEarnUse: "Daily use, recipes and skin analysis",
   walletTerms: "Rewards terms & conditions",
   walletPurchasePoints: "Points from your purchase 🌟",
+  walletReferTitle: "Invite a friend and earn 🌟",
+  walletReferSub: "200 points for you and 100 for your friend when she signs up.",
+  walletReferCopy: "Copy referral link",
+  walletReferCopied: "Link copied — share it now 💚",
+  walletReferShare: "Share link",
+  walletReferWelcome: "Welcome! You received 100 referral points 🌟",
 
   pushTitle: "Grandma Noura",
   pushBody:
