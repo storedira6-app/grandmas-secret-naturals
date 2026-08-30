@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Gift, Sparkles, ShoppingBag, Trophy, ShieldCheck } from "lucide-react";
+import { Gift, Sparkles, Trophy, ShieldCheck, Users, Share2 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { useGlow } from "@/lib/glow";
 import {
@@ -12,6 +12,7 @@ import {
   boxMsRemaining,
   markWithdrawalRequested,
   openMysteryBox,
+  referralLink,
   withdrawalStatus,
 } from "@/lib/loyalty";
 
@@ -39,6 +40,22 @@ function WalletPage() {
   const { points, award } = useGlow();
   const [remaining, setRemaining] = useState<number | null>(null);
   const [tick, setTick] = useState(0);
+  const [link, setLink] = useState("");
+
+  useEffect(() => setLink(referralLink()), []);
+
+  const onCopy = async () => {
+    await navigator.clipboard.writeText(link);
+    toast.success(t("walletReferCopied"));
+  };
+
+  const onShare = async () => {
+    if (navigator.share) {
+      await navigator.share({ title: t("walletReferTitle"), text: t("walletReferSub"), url: link });
+    } else {
+      await onCopy();
+    }
+  };
 
   useEffect(() => {
     const update = () => setRemaining(boxMsRemaining());
@@ -142,16 +159,32 @@ function WalletPage() {
         </button>
       </section>
 
-      <section className="glass-card rounded-3xl p-4">
+      <section className="glass-card rounded-3xl border border-gold/30 p-4">
         <p className="flex items-center gap-2 text-sm font-bold">
-          <ShoppingBag className="h-4 w-4 text-gold" />
-          {t("walletEarnTitle")}
+          <Users className="h-4 w-4 text-gold" />
+          {t("walletReferTitle")}
         </p>
-        <ul className="mt-2 space-y-1.5 text-[11px] text-muted-foreground">
-          <li>• {t("walletEarnPurchase")}</li>
-          <li>• {t("walletEarnBox")}</li>
-          <li>• {t("walletEarnUse")}</li>
-        </ul>
+        <p className="mt-0.5 text-[11px] text-muted-foreground">{t("walletReferSub")}</p>
+        <p className="mt-2 truncate rounded-2xl bg-secondary/70 px-3 py-2 text-[11px] font-semibold">
+          {link || "..."}
+        </p>
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={onCopy}
+            className="gradient-gold rounded-2xl py-3 text-xs font-bold text-gold-foreground transition-transform active:scale-95"
+          >
+            {t("walletReferCopy")}
+          </button>
+          <button
+            type="button"
+            onClick={onShare}
+            className="gradient-forest flex items-center justify-center gap-1.5 rounded-2xl py-3 text-xs font-bold text-primary-foreground transition-transform active:scale-95"
+          >
+            <Share2 className="h-3.5 w-3.5" />
+            {t("walletReferShare")}
+          </button>
+        </div>
       </section>
 
       <section className="rounded-3xl bg-secondary/60 p-4">

@@ -28,7 +28,13 @@ const K = {
   coupon: "gs-box-coupon",
   push2: "gs-push-day2-sent",
   withdraw: "gs-withdraw-requested",
+  referCode: "gs-referral-code",
+  referUsed: "gs-referral-used",
 } as const;
+
+/** Referral rewards: inviter gets 200 🌟, the new friend gets 100 🌟. */
+export const REFERRAL_INVITER_POINTS = 200;
+export const REFERRAL_FRIEND_POINTS = 100;
 
 const has = () => typeof window !== "undefined";
 const num = (key: string, fallback = 0) => {
@@ -183,4 +189,37 @@ export function pushDay2Sent() {
 
 export function markPushDay2Sent() {
   if (has()) window.localStorage.setItem(K.push2, "true");
+}
+
+
+/* ---------------- referrals ---------------- */
+
+/** Stable personal referral code for this device/account. */
+export function referralCode(): string {
+  if (!has()) return "GLOW";
+  let code = window.localStorage.getItem(K.referCode);
+  if (!code) {
+    code = `N${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+    window.localStorage.setItem(K.referCode, code);
+  }
+  return code;
+}
+
+export function referralLink(): string {
+  if (!has()) return "";
+  return `${window.location.origin}/?ref=${referralCode()}`;
+}
+
+/**
+ * Reads ?ref= on first open and returns the friend's welcome points once.
+ * Returns 0 when there is no new referral to reward.
+ */
+export function claimReferral(): number {
+  if (!has()) return 0;
+  const ref = new URLSearchParams(window.location.search).get("ref");
+  if (!ref) return 0;
+  if (ref === window.localStorage.getItem(K.referCode)) return 0;
+  if (window.localStorage.getItem(K.referUsed)) return 0;
+  window.localStorage.setItem(K.referUsed, ref);
+  return REFERRAL_FRIEND_POINTS;
 }

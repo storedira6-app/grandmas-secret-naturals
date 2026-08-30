@@ -5,7 +5,8 @@ import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { BottomNav } from "@/components/BottomNav";
 import { LeafParticles } from "@/components/LeafParticles";
-import { useDailyGlowBonus } from "@/lib/glow";
+import { useDailyGlowBonus, useGlow } from "@/lib/glow";
+import { claimReferral } from "@/lib/loyalty";
 import { hideBanner, initAds, showBanner } from "@/lib/ads";
 import { SmartHeroBanner } from "@/components/SmartHeroBanner";
 import { maybeSendDay2Reminder } from "@/lib/push";
@@ -18,6 +19,13 @@ export const Route = createFileRoute("/app")({
 function AppLayout() {
   const { t } = useI18n();
   useDailyGlowBonus(t("glowDaily"));
+  const { award } = useGlow();
+
+  // Welcome gift for friends arriving through a referral link.
+  useEffect(() => {
+    const gift = claimReferral();
+    if (gift > 0) award(gift, t("walletReferWelcome"));
+  }, [award, t]);
 
   useEffect(() => {
     ensureLifecycle();
