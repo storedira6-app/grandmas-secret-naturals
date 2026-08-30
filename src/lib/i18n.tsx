@@ -805,8 +805,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 
+/** Safe default so a component never crashes the page if it renders
+ *  outside the provider (e.g. during a hot-reload remount). */
+const FALLBACK_I18N = {
+  lang: "ar" as Lang,
+  dir: "rtl",
+  setLang: () => {},
+  t: (key: string) => DICTS.ar[key] ?? DICTS.en[key] ?? key,
+} as unknown as I18nValue;
+
 export function useI18n() {
-  const ctx = useContext(I18nContext);
-  if (!ctx) throw new Error("useI18n must be used inside I18nProvider");
-  return ctx;
+  return useContext(I18nContext) ?? FALLBACK_I18N;
 }
+
