@@ -71,6 +71,18 @@ export function RecipeCard({ recipe, index = 0 }: { recipe: Recipe; index?: numb
         </div>
         <p className="text-sm text-muted-foreground">{recipe.desc[lang]}</p>
 
+        <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-bold">
+          <span className="rounded-full bg-primary/10 px-2 py-1 text-primary">
+            🧾 {recipe.steps[lang].length}
+          </span>
+          <span className="rounded-full bg-gold/15 px-2 py-1 text-gold">
+            ✨ {recipe.ingredients[lang][0]}
+          </span>
+          <span className="rounded-full bg-secondary px-2 py-1 text-secondary-foreground">
+            🌙 {recipe.tag[lang]}
+          </span>
+        </div>
+
         <div className="flex flex-wrap gap-1.5">
           {recipe.ingredients[lang].slice(0, 3).map((i) => (
             <span

@@ -22,6 +22,7 @@ import { useGlow } from "@/lib/glow";
 import { SignInCard } from "@/components/SignIn";
 import { supabase } from "@/integrations/supabase/client";
 import { analyzeSkin } from "@/lib/skin.functions";
+import { Countdown } from "@/components/Countdown";
 import { preparePhoto, type PreparedPhoto } from "@/lib/image-quality";
 import { ProductRecommendations } from "@/components/store/ProductRecommendations";
 import { GlobalBrandSuggestions } from "@/components/store/GlobalBrandMarket";
@@ -202,20 +203,6 @@ function SkinTab() {
               alt=""
               className="h-52 w-full rounded-2xl object-cover"
             />
-            <div className="space-y-1 rounded-2xl bg-secondary/60 p-2.5">
-              <p className="text-[11px] font-bold text-primary">{t("skinQuality")}</p>
-              {photo.warnings.length === 0 ? (
-                <p className="text-[11px] text-muted-foreground">{t("qGood")}</p>
-              ) : (
-                <ul className="space-y-0.5">
-                  {photo.warnings.map((w) => (
-                    <li key={w} className="text-[11px] text-destructive">
-                      ⚠️ {t(w)}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
           </div>
         )}
 
@@ -256,6 +243,7 @@ function SkinTab() {
         <div className="glass-card animate-rise relative flex items-center gap-2 overflow-hidden rounded-3xl px-4 py-3 text-xs font-semibold text-primary">
           <Microscope className="h-4 w-4 animate-pulse" />
           {t("skinAnalyzing")}
+          <Countdown seconds={30} />
           <span className="animate-scan pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-gold" />
         </div>
       )}
@@ -343,9 +331,6 @@ function ReportView({
           </span>
         </div>
         <p className="text-xs text-muted-foreground">{report.skinTypeNote}</p>
-        {report.imageQuality && (
-          <p className="text-[11px] text-muted-foreground">📷 {report.imageQuality}</p>
-        )}
       </section>
 
       <section className="glass-card space-y-2.5 rounded-3xl p-4">
