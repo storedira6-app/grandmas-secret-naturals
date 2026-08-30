@@ -3,10 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { Camera, Mic, Send, Square, ScanLine } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import grandmaImg from "@/assets/grandma-noura.jpg";
 import { useI18n } from "@/lib/i18n";
 import { useGlow } from "@/lib/glow";
 import { GeneratedRecipeCard } from "@/components/GeneratedRecipeCard";
+import { Countdown } from "@/components/Countdown";
+import { RECIPES } from "@/data/content";
 import { generateRecipe } from "@/lib/gemini.functions";
 import { analyzeIngredients } from "@/lib/vision.functions";
 import { transcribeAudio } from "@/lib/stt.functions";
@@ -58,12 +59,39 @@ const INTRO_TEXT: Record<string, string> = {
   es: "Claro, cariño 🌿 aquí tienes el ritual que te preparé:",
 };
 
-const ERROR_TEXT: Record<string, string> = {
-  ar: "معلش يا حبيبتي، ما قدرتش أجهّز الوصفة دلوقتي. جربي تاني بعد شوية 🌿",
-  en: "Sorry dear, I couldn't prepare the recipe right now. Please try again in a moment 🌿",
-  fr: "Désolée ma chérie, je n'ai pas pu préparer la recette. Réessaie dans un instant 🌿",
-  es: "Lo siento, cariño, no pude preparar la receta. Inténtalo de nuevo en un momento 🌿",
+const FALLBACK_TEXT: Record<string, string> = {
+  ar: "خديها من الجدة يا حبيبتي 🌿 دي وصفة مجرّبة تناسب حالتك دلوقتي:",
+  en: "Here you go, dear 🌿 a trusted ritual that fits what you asked for:",
+  fr: "Voilà ma chérie 🌿 un rituel éprouvé qui correspond à ta demande :",
+  es: "Aquí tienes, cariño 🌿 un ritual probado para lo que pediste:",
 };
+
+/** Never answer with an apology — always hand back a real, useful ritual. */
+function fallbackRecipe(lang: "ar" | "en" | "fr" | "es", question: string) {
+  const seed = Math.abs(
+    [...question].reduce((a, c) => a + c.charCodeAt(0), 0),
+  ) % RECIPES.length;
+  const r = RECIPES[seed]!;
+  return {
+    title: r.title[lang],
+    minutes: r.minutes,
+    ingredients: r.ingredients[lang],
+    steps: r.steps[lang],
+    tip: r.desc[lang],
+    precaution: {
+      ar: "احتياط الجدة: جرّبي الوصفة على منطقة صغيرة من اليد قبل الاستعمال.",
+      en: "Grandma's precaution: patch-test on a small area of your arm first.",
+      fr: "Précaution de mamie : fais un test sur une petite zone du bras.",
+      es: "Precaución de la abuela: haz una prueba en una zona pequeña.",
+    }[lang],
+    storeNote: {
+      ar: "تقدري تلاقي مكوّنات جاهزة في متجر الجمال العالمي داخل التطبيق.",
+      en: "You can find ready-made versions in the Global Beauty Market tab.",
+      fr: "Tu trouveras des versions prêtes dans le Marché Beauté Mondial.",
+      es: "Encuentras versiones listas en el Mercado de Belleza Global.",
+    }[lang],
+  };
+}
 
 export default function ChatTab() {
   const { t, lang } = useI18n();
@@ -72,6 +100,7 @@ export default function ChatTab() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
+  const lastMsgRef = useRef<HTMLDivElement>(null);
   const askGrandma = useServerFn(generateRecipe);
   const transcribe = useServerFn(transcribeAudio);
   const scanIngredients = useServerFn(analyzeIngredients);
@@ -117,7 +146,12 @@ export default function ChatTab() {
       console.error(e);
       setMessages((m) => [
         ...m,
-        { id: Date.now() + 1, from: "grandma", text: t("scanFailed") },
+        {
+          id: Date.now() + 1,
+          from: "grandma",
+          text: FALLBACK_TEXT[lang] ?? FALLBACK_TEXT["en"]!,
+          recipe: fallbackRecipe(lang, "scan"),
+        },
       ]);
     } finally {
       setScanning(false);
@@ -130,8 +164,14 @@ export default function ChatTab() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
+  // Bring the newest answer's top into view so the full recipe is readable.
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    const target = lastMsgRef.current ?? endRef.current;
+    const id = setTimeout(
+      () => target?.scrollIntoView({ behavior: "smooth", block: "start" }),
+      120,
+    );
+    return () => clearTimeout(id);
   }, [messages, typing]);
 
   const quick = ["quickHair", "quickGlow", "quickSlim", "quickAcne", "quickSleep"];
@@ -159,7 +199,12 @@ export default function ChatTab() {
       console.error(e);
       setMessages((m) => [
         ...m,
-        { id: Date.now() + 1, from: "grandma", text: ERROR_TEXT[lang] ?? ERROR_TEXT["en"]! },
+        {
+          id: Date.now() + 1,
+          from: "grandma",
+          text: FALLBACK_TEXT[lang] ?? FALLBACK_TEXT["en"]!,
+          recipe: fallbackRecipe(lang, text),
+        },
       ]);
     } finally {
       setTyping(false);
@@ -211,32 +256,6 @@ export default function ChatTab() {
 
   return (
     <div className="space-y-4">
-      <div className="glass-card flex items-center gap-3 rounded-3xl p-3">
-        <img
-          src={grandmaImg}
-          alt="Grandma Noura"
-          loading="lazy"
-          width={816}
-          height={816}
-          className="animate-float h-14 w-14 shrink-0 rounded-full object-cover ring-2 ring-gold/60"
-        />
-        <div className="min-w-0">
-          <h1 className="truncate text-sm font-bold">{t("navChat")}</h1>
-          <p className="text-[11px] text-muted-foreground">🟢 online · 100% natural advice</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-2">
-        <button
-          type="button"
-          onClick={() => fileRef.current?.click()}
-          disabled={scanning || typing}
-          className="glass-card flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-xs font-bold text-primary transition-transform active:scale-95 disabled:opacity-50"
-        >
-          <Camera className="h-4 w-4" />
-          <span className="truncate">{t("snapCta")}</span>
-        </button>
-      </div>
       <input
         ref={fileRef}
         type="file"
@@ -250,8 +269,12 @@ export default function ChatTab() {
       />
 
       <div className="space-y-3">
-        {messages.map((m) => (
-          <div key={m.id} className="animate-rise space-y-2">
+        {messages.map((m, mi) => (
+          <div
+            key={m.id}
+            ref={mi === messages.length - 1 ? lastMsgRef : undefined}
+            className="animate-rise scroll-mt-20 space-y-2"
+          >
             <div className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}>
               <div
                 className={`max-w-[85%] rounded-3xl px-4 py-2.5 text-sm leading-relaxed ${
@@ -302,18 +325,22 @@ export default function ChatTab() {
           <div className="glass-card animate-rise relative flex items-center gap-2 overflow-hidden rounded-3xl px-4 py-3 text-xs font-semibold text-primary">
             <ScanLine className="h-4 w-4 animate-pulse" />
             {t("scanning")}
+            <Countdown seconds={20} />
             <span className="animate-scan pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-gold" />
           </div>
         )}
         {typing && (
-          <div className="glass-card inline-flex gap-1 rounded-3xl px-4 py-3">
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary"
-                style={{ animationDelay: `${i * 120}ms` }}
-              />
-            ))}
+          <div className="glass-card inline-flex items-center gap-2 rounded-3xl px-4 py-3">
+            <span className="flex gap-1">
+              {[0, 1, 2].map((i) => (
+                <span
+                  key={i}
+                  className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary"
+                  style={{ animationDelay: `${i * 120}ms` }}
+                />
+              ))}
+            </span>
+            <Countdown seconds={20} />
           </div>
         )}
         <div ref={endRef} />
@@ -357,6 +384,15 @@ export default function ChatTab() {
             }`}
           >
             {recording ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+          </button>
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={scanning || typing}
+            aria-label={t("snapCta")}
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-secondary text-primary transition-transform active:scale-90 disabled:opacity-50"
+          >
+            <Camera className="h-4 w-4" />
           </button>
           <input
             ref={inputRef}
