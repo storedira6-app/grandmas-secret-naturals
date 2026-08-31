@@ -13,6 +13,8 @@ import { analyzeIngredients } from "@/lib/vision.functions";
 import { transcribeAudio } from "@/lib/stt.functions";
 import { startRecording, blobToBase64, type VoiceRecorder } from "@/lib/recorder";
 import { showInterstitial } from "@/lib/ads";
+import { useDailyUses } from "@/lib/usage";
+import { UsageGate } from "@/components/UsageGate";
 import type { GeneratedRecipe } from "@/lib/gemini.server";
 
 
@@ -110,9 +112,12 @@ export default function ChatTab() {
   const [scanning, setScanning] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const recorderRef = useRef<VoiceRecorder | null>(null);
+  const usage = useDailyUses("chat");
 
   const onPhoto = async (file: File | undefined) => {
     if (!file || scanning || typing) return;
+    if (usage.limitReached) return;
+    usage.consume();
     const preview = URL.createObjectURL(file);
     setMessages((m) => [...m, { id: Date.now(), from: "me", text: t("snapShort"), photo: preview }]);
     setScanning(true);
@@ -178,6 +183,8 @@ export default function ChatTab() {
 
   const reply = async (text: string) => {
     if (typing) return;
+    if (usage.limitReached) return;
+    usage.consume();
     setTyping(true);
     setMessages((m) => [...m, { id: Date.now(), from: "me", text }]);
     try {
@@ -348,12 +355,15 @@ export default function ChatTab() {
 
 
       <div className="fixed inset-x-0 bottom-24 z-30 mx-auto max-w-md px-4">
+        <div className="mb-2">
+          <UsageGate feature="chat" left={usage.left} ready={usage.ready} onUnlock={usage.grant} />
+        </div>
         <div className="-mx-1 mb-2 flex gap-2 overflow-x-auto px-1 pb-1">
           {quick.map((q) => (
             <button
               key={q}
               type="button"
-              disabled={typing}
+              disabled={typing || usage.limitReached}
               onClick={() => void reply(t(q))}
               className="glass-card shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold text-primary transition-transform active:scale-95 disabled:opacity-50"
             >
@@ -364,7 +374,7 @@ export default function ChatTab() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (!input.trim() || typing) return;
+            if (!input.trim() || typing || usage.limitReached) return;
             void reply(input.trim());
             setInput("");
             inputRef.current?.focus();
@@ -388,7 +398,7 @@ export default function ChatTab() {
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            disabled={scanning || typing}
+            disabled={scanning || typing || usage.limitReached}
             aria-label={t("snapCta")}
             className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-secondary text-primary transition-transform active:scale-90 disabled:opacity-50"
           >
@@ -407,6 +417,7 @@ export default function ChatTab() {
 
           <button
             type="submit"
+            disabled={usage.limitReached}
             aria-label={t("send")}
             className="gradient-gold grid h-9 w-9 shrink-0 place-items-center rounded-full text-gold-foreground transition-transform active:scale-90"
           >

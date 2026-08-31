@@ -23,6 +23,8 @@ import { SignInCard } from "@/components/SignIn";
 import { supabase } from "@/integrations/supabase/client";
 import { analyzeSkin } from "@/lib/skin.functions";
 import { Countdown } from "@/components/Countdown";
+import { useDailyUses } from "@/lib/usage";
+import { UsageGate } from "@/components/UsageGate";
 import { preparePhoto, type PreparedPhoto } from "@/lib/image-quality";
 import { ProductRecommendations } from "@/components/store/ProductRecommendations";
 import { GlobalBrandSuggestions } from "@/components/store/GlobalBrandMarket";
@@ -85,6 +87,7 @@ function SkinTab() {
   const { award } = useGlow();
   const qc = useQueryClient();
   const runAnalysis = useServerFn(analyzeSkin);
+  const usage = useDailyUses("skin");
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [area, setArea] = useState<Area>("face");
@@ -110,6 +113,8 @@ function SkinTab() {
   const analyze = useMutation({
     mutationFn: async () => {
       if (!photo) throw new Error("no photo");
+      if (usage.limitReached) throw new Error("daily limit");
+      usage.consume();
       const [result] = await Promise.all([
         runAnalysis({
           data: {
@@ -218,7 +223,7 @@ function SkinTab() {
           </button>
           <button
             type="button"
-            disabled={!photo || analyze.isPending}
+            disabled={!photo || analyze.isPending || usage.limitReached}
             onClick={() => analyze.mutate()}
             className="gradient-gold flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-xs font-bold text-gold-foreground transition-transform active:scale-95 disabled:opacity-50"
           >
@@ -226,6 +231,8 @@ function SkinTab() {
             <span className="truncate">{t("skinAnalyze")}</span>
           </button>
         </div>
+        <UsageGate feature="skin" left={usage.left} ready={usage.ready} onUnlock={usage.grant} />
+
         <input
           ref={fileRef}
           type="file"

@@ -760,11 +760,50 @@ const skinEs: Dict = {
   skinDisclaimer: "Análisis estético — no es un diagnóstico médico.",
 };
 
+
+const usageEn: Dict = {
+  usageLeft: "{n} free uses left today 🌿",
+  usageDone: "You've used today's free runs 🌿",
+  usageUnlockHint: "Watch a short sponsor video to unlock more right away.",
+  usageWatch: "Watch a video to unlock",
+  usageWatching: "Counting your view...",
+  usageUnlocked: "{n} extra uses unlocked ✨",
+};
+
+const usageAr: Dict = {
+  usageLeft: "باقي لك {n} استعمالات مجانية اليوم 🌿",
+  usageDone: "خلصت استعمالاتك المجانية لليوم 🌿",
+  usageUnlockHint: "شاهدي فيديو قصير من الراعي وافتحي استعمالات إضافية فوراً.",
+  usageWatch: "مشاهدة فيديو وفتح المزيد",
+  usageWatching: "جاري احتساب المشاهدة...",
+  usageUnlocked: "تم فتح {n} استعمالات إضافية ✨",
+};
+
+const usageFr: Dict = {
+  ...usageEn,
+  usageLeft: "Il te reste {n} utilisations gratuites aujourd'hui 🌿",
+  usageDone: "Tes utilisations gratuites du jour sont épuisées 🌿",
+  usageUnlockHint: "Regarde une courte vidéo sponsorisée pour en débloquer plus.",
+  usageWatch: "Regarder une vidéo",
+  usageWatching: "Comptage de la vue...",
+  usageUnlocked: "{n} utilisations débloquées ✨",
+};
+
+const usageEs: Dict = {
+  ...usageEn,
+  usageLeft: "Te quedan {n} usos gratis hoy 🌿",
+  usageDone: "Agotaste tus usos gratis de hoy 🌿",
+  usageUnlockHint: "Mira un video breve del patrocinador para desbloquear más.",
+  usageWatch: "Ver video y desbloquear",
+  usageWatching: "Contando tu visualización...",
+  usageUnlocked: "{n} usos extra desbloqueados ✨",
+};
+
 const DICTS: Record<Lang, Dict> = {
-  ar: { ...ar, ...extraAr, ...viralAr, ...storeAr, ...skinAr, ...loyaltyAr },
-  en: { ...en, ...extraEn, ...viralEn, ...storeEn, ...skinEn, ...loyaltyEn },
-  fr: { ...fr, ...extraFr, ...viralFr, ...storeFr, ...skinFr, ...loyaltyFr },
-  es: { ...es, ...extraEs, ...viralEs, ...storeEs, ...skinEs, ...loyaltyEs },
+  ar: { ...ar, ...extraAr, ...viralAr, ...storeAr, ...skinAr, ...loyaltyAr, ...usageAr },
+  en: { ...en, ...extraEn, ...viralEn, ...storeEn, ...skinEn, ...loyaltyEn, ...usageEn },
+  fr: { ...fr, ...extraFr, ...viralFr, ...storeFr, ...skinFr, ...loyaltyFr, ...usageFr },
+  es: { ...es, ...extraEs, ...viralEs, ...storeEs, ...skinEs, ...loyaltyEs, ...usageEs },
 };
 
 
