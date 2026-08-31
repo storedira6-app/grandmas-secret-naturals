@@ -27,10 +27,6 @@ export function UsageGate({ left, ready, onUnlock }: Props) {
     return () => clearTimeout(id);
   }, [waiting]);
 
-  useEffect(() => {
-    if (waiting !== 0) return;
-    // no-op: unlock is granted in the tick handler below
-  }, [waiting]);
 
   const watch = () => {
     if (waiting > 0) return;
