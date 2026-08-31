@@ -113,6 +113,23 @@ export default function ChatTab() {
   const fileRef = useRef<HTMLInputElement>(null);
   const recorderRef = useRef<VoiceRecorder | null>(null);
   const usage = useDailyUses("chat");
+  const composerRef = useRef<HTMLDivElement>(null);
+  const [composerH, setComposerH] = useState(220);
+
+  // Keep enough space under the last answer so nothing hides behind the composer.
+  useEffect(() => {
+    const el = composerRef.current;
+    if (!el) return;
+    const update = () => setComposerH(el.offsetHeight + 120);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
 
   const onPhoto = async (file: File | undefined) => {
     if (!file || scanning || typing) return;
