@@ -279,7 +279,7 @@ export default function ChatTab() {
 
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" style={{ paddingBottom: composerH }}>
       <input
         ref={fileRef}
         type="file"
@@ -297,7 +297,7 @@ export default function ChatTab() {
           <div
             key={m.id}
             ref={mi === messages.length - 1 ? lastMsgRef : undefined}
-            className="animate-rise scroll-mt-20 space-y-2"
+            className="animate-rise scroll-mt-24 space-y-2"
           >
             <div className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}>
               <div
@@ -371,7 +371,7 @@ export default function ChatTab() {
       </div>
 
 
-      <div className="fixed inset-x-0 bottom-24 z-30 mx-auto max-w-md px-4">
+      <div ref={composerRef} className="fixed inset-x-0 bottom-24 z-30 mx-auto max-w-md px-4">
         <div className="mb-2">
           <UsageGate feature="chat" left={usage.left} ready={usage.ready} onUnlock={usage.grant} />
         </div>
