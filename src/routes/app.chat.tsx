@@ -113,6 +113,23 @@ export default function ChatTab() {
   const fileRef = useRef<HTMLInputElement>(null);
   const recorderRef = useRef<VoiceRecorder | null>(null);
   const usage = useDailyUses("chat");
+  const composerRef = useRef<HTMLDivElement>(null);
+  const [composerH, setComposerH] = useState(220);
+
+  // Keep enough space under the last answer so nothing hides behind the composer.
+  useEffect(() => {
+    const el = composerRef.current;
+    if (!el) return;
+    const update = () => setComposerH(el.offsetHeight + 120);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
 
   const onPhoto = async (file: File | undefined) => {
     if (!file || scanning || typing) return;
@@ -262,7 +279,7 @@ export default function ChatTab() {
 
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" style={{ paddingBottom: composerH }}>
       <input
         ref={fileRef}
         type="file"
@@ -280,7 +297,7 @@ export default function ChatTab() {
           <div
             key={m.id}
             ref={mi === messages.length - 1 ? lastMsgRef : undefined}
-            className="animate-rise scroll-mt-20 space-y-2"
+            className="animate-rise scroll-mt-24 space-y-2"
           >
             <div className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}>
               <div
@@ -354,7 +371,7 @@ export default function ChatTab() {
       </div>
 
 
-      <div className="fixed inset-x-0 bottom-24 z-30 mx-auto max-w-md px-4">
+      <div ref={composerRef} className="fixed inset-x-0 bottom-24 z-30 mx-auto max-w-md px-4">
         <div className="mb-2">
           <UsageGate feature="chat" left={usage.left} ready={usage.ready} onUnlock={usage.grant} />
         </div>
