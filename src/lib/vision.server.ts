@@ -48,7 +48,7 @@ export async function analyzeIngredientsWithGemini(opts: {
 }): Promise<VisionRecipe> {
   const language = LANG_NAME[opts.lang] ?? "English";
   const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent",
     {
       method: "POST",
       headers: {

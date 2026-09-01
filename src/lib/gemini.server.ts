@@ -51,8 +51,8 @@ const RESPONSE_SCHEMA = {
   required: ["greeting", "title", "minutes", "ingredients", "steps", "tip", "precaution", "storeNote"],
 };
 
-/** Fast models tried in order — a busy model falls back instead of failing. */
-const MODELS = ["gemini-flash-latest", "gemini-2.5-flash-lite", "gemini-2.0-flash"];
+/** Fast, currently-available models tried in order — a busy model falls back instead of failing. */
+const MODELS = ["gemini-flash-lite-latest", "gemini-3.5-flash-lite", "gemini-flash-latest"];
 
 export async function generateRecipeWithGemini(opts: {
   apiKey: string;
@@ -77,7 +77,6 @@ export async function generateRecipeWithGemini(opts: {
       maxOutputTokens: 1200,
       responseMimeType: "application/json",
       responseSchema: RESPONSE_SCHEMA,
-      thinkingConfig: { thinkingBudget: 0 },
     },
   });
 

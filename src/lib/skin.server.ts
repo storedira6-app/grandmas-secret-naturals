@@ -180,7 +180,7 @@ RULES
   for (let attempt = 0; attempt < 3; attempt += 1) {
     if (attempt > 0) await new Promise((r) => setTimeout(r, attempt * 2500));
     const attemptRes = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent",
       {
         method: "POST",
         headers: {
