@@ -1,7 +1,7 @@
 import type { Lang } from "@/lib/i18n";
 
 /**
- * "Global Beauty Market" — curated international clean-beauty partners.
+ * "Global Beauty Market" — curated affiliate partners.
  * Each brand carries matching tags so Grandma Noura's recipes, the home
  * recommendations and the skin report can link straight to the right partner.
  */
@@ -10,224 +10,307 @@ export type GlobalBrand = {
   brand: string;
   domain: string;
   url: string;
+  /** Country-specific affiliate links (ISO-2 code -> url), used when available. */
+  regionalUrls?: Record<string, string>;
+  /** When set, the brand is only shown to visitors from these countries. */
+  countries?: string[];
   tagline: Record<Lang, string>;
-  /** Lowercase keywords (en + ar + fr/es roots) used to match recipes & concerns. */
+  /** Lowercase keywords (en + ar roots) used to match recipes & concerns. */
   tags: string[];
 };
 
+const HAIR = ["hair", "scalp", "shampoo", "oil", "شعر", "فروة", "شامبو", "زيت"];
+const SKIN = ["skin", "face", "cream", "moisturizer", "بشرة", "وجه", "كريم", "مرطب"];
+
 export const GLOBAL_BRANDS: GlobalBrand[] = [
   {
-    id: "inika",
-    brand: "INIKA Organic",
-    domain: "inikaorganic.com",
-    url: "https://yazing.com/deals/inikaorganic/alamrani_khalil",
+    id: "nazih-ksa",
+    brand: "NAZIH KSA",
+    domain: "nazih.sa",
+    url: "https://www.linkaraby.com/scripts/2xch8l8dq0?a_aid=hlxaz1bw4xpxe&a_bid=2ee85612&desturl=https%3A%2F%2Fwww.linkaraby.com%2Fscripts%2F2xch8l8dq0%3Fa_aid%3Dhlxaz1bw4xpxe%26a_bid%3D2ee85612",
+    countries: ["SA"],
     tagline: {
-      ar: "مكياج ومستحضرات عضوية معتمدة، لطيفة على البشرة الحساسة.",
-      en: "Certified organic makeup & skincare, gentle on sensitive skin.",
-      fr: "Maquillage et soins bio certifiés, doux pour les peaux sensibles.",
-      es: "Maquillaje y cuidado orgánico certificado, apto para piel sensible.",
+      ar: "نزيه السعودية: عناية احترافية بالشعر والبشرة والأظافر.",
+      en: "Nazih KSA: professional hair, skin and nail care.",
+      fr: "Nazih Arabie : soins pro cheveux, peau et ongles.",
+      es: "Nazih KSA: cuidado profesional de cabello, piel y uñas.",
     },
-    tags: [
-      "makeup",
-      "foundation",
-      "mascara",
-      "lips",
-      "organic",
-      "sensitive",
-      "redness",
-      "mineral",
-      "spf",
-      "sun",
-      "sunscreen",
-      "مكياج",
-      "حساسة",
-      "احمرار",
-      "عضوي",
-      "شمس",
-      "واقي",
-    ],
+    tags: [...HAIR, ...SKIN, "keratin", "nails", "salon", "أظافر", "كيراتين", "صالون"],
   },
   {
-    id: "purehundred",
-    brand: "100% PURE",
-    domain: "100percentpure.com",
-    url: "https://yazing.com/deals/100percentpure/alamrani_khalil",
+    id: "nazih-uae",
+    brand: "NAZIH UAE",
+    domain: "nazih.ae",
+    url: "https://www.linkaraby.com/scripts/2xch8l8dq0?a_aid=hlxaz1bw4xpxe&a_bid=f4dde4b6&desturl=https%3A%2F%2Fwww.linkaraby.com%2Fscripts%2F2xch8l8dq0%3Fa_aid%3Dhlxaz1bw4xpxe%26a_bid%3Df4dde4b",
+    countries: ["AE"],
     tagline: {
-      ar: "تركيبات نباتية بالفواكه: سيرومات، مرطبات وماسكات للنضارة والتصبغات.",
-      en: "Fruit-pigmented serums, moisturizers & masks for glow and dark spots.",
-      fr: "Sérums, hydratants et masques aux fruits pour l'éclat et les taches.",
-      es: "Sérums, hidratantes y mascarillas de frutas para brillo y manchas.",
+      ar: "نزيه الإمارات: عناية احترافية بالشعر والبشرة والأظافر.",
+      en: "Nazih UAE: professional hair, skin and nail care.",
+      fr: "Nazih Émirats : soins pro cheveux, peau et ongles.",
+      es: "Nazih EAU: cuidado profesional de cabello, piel y uñas.",
+    },
+    tags: [...HAIR, ...SKIN, "keratin", "nails", "salon", "أظافر", "كيراتين", "صالون"],
+  },
+  {
+    id: "kaya",
+    brand: "Kaya",
+    domain: "kayacosmo.com",
+    url: "https://kayacosmo.com/?a_aid=hlxaz1bw4xpxe&a_bid=df2b5023",
+    tagline: {
+      ar: "كايا: مستحضرات عناية بالبشرة وعلاجات التصبغات والنضارة.",
+      en: "Kaya: skincare treatments for pigmentation and glow.",
+      fr: "Kaya : soins ciblés taches et éclat.",
+      es: "Kaya: tratamientos para manchas y luminosidad.",
     },
     tags: [
+      ...SKIN,
       "serum",
-      "vitamin c",
-      "moisturizer",
-      "mask",
       "glow",
       "brightening",
       "dark spots",
       "pigmentation",
-      "hydration",
-      "aloe",
-      "rose",
-      "honey",
-      "turmeric",
-      "lemon",
+      "acne",
       "سيروم",
-      "مرطب",
-      "ماسك",
       "نضارة",
       "بقع",
       "تصبغات",
-      "ترطيب",
-      "عسل",
-      "كركم",
-      "ليمون",
-      "ورد",
+      "حبوب",
     ],
   },
   {
-    id: "alamea",
-    brand: "ALAMEA Palm Beach",
-    domain: "alameapalmbeach.com",
-    url: "https://yazing.com/deals/alameapalmbeach/alamrani_khalil",
+    id: "bolver",
+    brand: "BOLVER USA",
+    domain: "bolverusa.com",
+    url: "https://www.linkaraby.com/scripts/2xch8l8dq0?a_aid=hlxaz1bw4xpxe&a_bid=4e4033de&desturl=https%3A%2F%2Fwww.linkaraby.com%2Fscripts%2F2xch8l8dq0%3Fa_aid%3Dhlxaz1bw4xpxe%26a_bid%3D2ee85612",
     tagline: {
-      ar: "عناية فاخرة بالبشرة: مكافحة التجاعيد والخطوط الدقيقة وشد البشرة.",
-      en: "Luxury anti-aging care for wrinkles, fine lines and firmness.",
-      fr: "Soins anti-âge de luxe : rides, ridules et fermeté.",
-      es: "Cuidado antiedad de lujo: arrugas, líneas finas y firmeza.",
+      ar: "بوليفر: مكياج احترافي وأدوات تجميل عالية الجودة.",
+      en: "Bolver: professional makeup and beauty tools.",
+      fr: "Bolver : maquillage pro et accessoires beauté.",
+      es: "Bolver: maquillaje profesional y herramientas de belleza.",
+    },
+    tags: ["makeup", "foundation", "lips", "brush", "مكياج", "أحمر شفاه", "فرشاة", "كونسيلر"],
+  },
+  {
+    id: "argania",
+    brand: "Argania Beauty",
+    domain: "arganiabeauty.com",
+    url: "https://arganiabeauty.com/?a_aid=hlxaz1bw4xpxe&a_bid=af86474d",
+    tagline: {
+      ar: "أرقانيا بيوتي: زيت الأرغان المغربي وزيوت طبيعية للشعر والبشرة.",
+      en: "Argania Beauty: Moroccan argan oil and natural oils.",
+      fr: "Argania Beauty : huile d'argan marocaine et huiles naturelles.",
+      es: "Argania Beauty: aceite de argán marroquí y aceites naturales.",
     },
     tags: [
+      ...HAIR,
+      "argan",
+      "oils",
+      "dry",
+      "hydration",
+      "body",
+      "أرغان",
+      "زيوت",
+      "جافة",
+      "ترطيب",
+      "جسم",
+    ],
+  },
+  {
+    id: "rawaj",
+    brand: "Rawaj Care",
+    domain: "rawajcare.com",
+    url: "https://rawajcare.com/?utm_source=linkaraby&utm_medium=referral&a_aid=hlxaz1bw4xpxe&a_bid=59a32666",
+    tagline: {
+      ar: "رواج: منتجات عناية يومية بالشعر والجسم بمكوّنات طبيعية.",
+      en: "Rawaj Care: daily natural hair and body care.",
+      fr: "Rawaj Care : soins quotidiens naturels cheveux et corps.",
+      es: "Rawaj Care: cuidado diario natural de cabello y cuerpo.",
+    },
+    tags: [...HAIR, "body", "lotion", "dandruff", "جسم", "لوشن", "قشرة", "تساقط"],
+  },
+  {
+    id: "imooie",
+    brand: "IMOOIE",
+    domain: "imooie.me",
+    url: "https://imooie.me/?utm_source=linkaraby&utm_medium=referral&a_aid=hlxaz1bw4xpxe&a_bid=cb23565a",
+    tagline: {
+      ar: "آي مووي: عناية بالبشرة ومنتجات جمال عصرية.",
+      en: "IMOOIE: modern skincare and beauty essentials.",
+      fr: "IMOOIE : soins et essentiels beauté modernes.",
+      es: "IMOOIE: cuidado facial y esenciales de belleza.",
+    },
+    tags: [...SKIN, "mask", "serum", "glow", "ماسك", "سيروم", "نضارة"],
+  },
+  {
+    id: "taswahum",
+    brand: "Taswahum",
+    domain: "taswahum.com",
+    url: "https://taswahum.com/?utm_source=linkaraby&utm_medium=referral&a_aid=hlxaz1bw4xpxe&a_bid=6b57966f",
+    tagline: {
+      ar: "تسواهم: تشكيلة عطور ومنتجات عناية وجمال.",
+      en: "Taswahum: fragrance, care and beauty picks.",
+      fr: "Taswahum : parfums et produits beauté.",
+      es: "Taswahum: perfumes y productos de belleza.",
+    },
+    tags: ["perfume", "fragrance", "body", "gift", "عطر", "عطور", "جسم", "هدية"],
+  },
+  {
+    id: "victoria-ksa",
+    brand: "Victoria's Secret KSA",
+    domain: "victoriassecret.com",
+    url: "https://www.linkaraby.com/scripts/2xch8l8dq0?a_aid=hlxaz1bw4xpxe&a_bid=f05df119&desturl=https%3A%2F%2Fwww.linkaraby.com%2Fscripts%2F2xch8l8dq0%3Fa_aid%3Dhlxaz1bw4xpxe%26a_bid%3Df05df119",
+    countries: ["SA"],
+    tagline: {
+      ar: "فيكتوريا سيكرت السعودية: عطور ومرطبات الجسم الفاخرة.",
+      en: "Victoria's Secret KSA: luxury mists and body care.",
+      fr: "Victoria's Secret Arabie : brumes et soins corps.",
+      es: "Victoria's Secret KSA: brumas y cuidado corporal.",
+    },
+    tags: ["perfume", "mist", "body", "lotion", "عطر", "جسم", "لوشن", "مرطب"],
+  },
+  {
+    id: "victoria-uae",
+    brand: "Victoria's Secret UAE",
+    domain: "victoriassecret.com",
+    url: "https://www.linkaraby.com/scripts/2xch8l8dq0?a_aid=hlxaz1bw4xpxe&a_bid=57ddce8a&desturl=https%3A%2F%2Fwww.linkaraby.com%2Fscripts%2F2xch8l8dq0%3Fa_aid%3Dhlxaz1bw4xpxe%26a_bid%3D57ddce8a",
+    countries: ["AE"],
+    tagline: {
+      ar: "فيكتوريا سيكرت الإمارات: عطور ومرطبات الجسم الفاخرة.",
+      en: "Victoria's Secret UAE: luxury mists and body care.",
+      fr: "Victoria's Secret Émirats : brumes et soins corps.",
+      es: "Victoria's Secret EAU: brumas y cuidado corporal.",
+    },
+    tags: ["perfume", "mist", "body", "lotion", "عطر", "جسم", "لوشن", "مرطب"],
+  },
+  {
+    id: "alyasamine",
+    brand: "Al Yasamine Cosmetics",
+    domain: "alyasamineb.com",
+    url: "https://alyasamineb.com/?utm_source=linkaraby&utm_medium=referral&a_aid=hlxaz1bw4xpxe&a_bid=419c2f8b",
+    tagline: {
+      ar: "الياسمين: مستحضرات تجميل وعناية بأسعار مناسبة.",
+      en: "Al Yasamine: affordable cosmetics and care.",
+      fr: "Al Yasamine : cosmétiques et soins accessibles.",
+      es: "Al Yasamine: cosmética y cuidado asequibles.",
+    },
+    tags: ["makeup", "cosmetics", ...SKIN, "مكياج", "تجميل"],
+  },
+  {
+    id: "myanherb",
+    brand: "Mayan Herb",
+    domain: "myanherb.com",
+    url: "https://myanherb.com/?a_aid=hlxaz1bw4xpxe&a_bid=dafb853b",
+    tagline: {
+      ar: "عشبة ميان: أعشاب وخلطات طبيعية للشعر والبشرة.",
+      en: "Mayan Herb: natural herbal blends for hair and skin.",
+      fr: "Mayan Herb : mélanges d'herbes naturelles.",
+      es: "Mayan Herb: mezclas herbales naturales.",
+    },
+    tags: [
+      ...HAIR,
+      "herbs",
+      "herbal",
+      "henna",
+      "natural",
+      "أعشاب",
+      "عشبة",
+      "حناء",
+      "خلطة",
+      "طبيعي",
+    ],
+  },
+  {
+    id: "majestya",
+    brand: "Majestya",
+    domain: "majestya.com",
+    url: "https://majestya.com/?a_aid=hlxaz1bw4xpxe&a_bid=2834779f",
+    tagline: {
+      ar: "مجستيا: عناية فاخرة بالبشرة ومكافحة علامات التقدم بالسن.",
+      en: "Majestya: luxury skincare and anti-aging care.",
+      fr: "Majestya : soins de luxe et anti-âge.",
+      es: "Majestya: cuidado de lujo y antiedad.",
+    },
+    tags: [
+      ...SKIN,
       "anti-aging",
       "wrinkles",
-      "fine lines",
-      "firmness",
       "collagen",
-      "retinol",
-      "peptide",
-      "eye cream",
       "night cream",
-      "argan",
-      "olive oil",
+      "eye cream",
       "تجاعيد",
-      "خطوط",
       "شد",
       "كولاجين",
       "ليلي",
-      "أرغان",
-      "زيت الزيتون",
       "حول العين",
     ],
   },
   {
-    id: "aniise",
-    brand: "Aniise",
-    domain: "aniise.com",
-    url: "https://yazing.com/deals/aniise/alamrani_khalil",
+    id: "arganour",
+    brand: "Arganour KSA",
+    domain: "arganour.sa",
+    url: "https://arganour.sa/?a_aid=hlxaz1bw4xpxe&a_bid=d82ac4b6",
     tagline: {
-      ar: "عناية بالشعر وفروة الرأس بزيوت طبيعية وبروتين حرير.",
-      en: "Hair & scalp care with natural oils and silk protein.",
-      fr: "Soins cheveux et cuir chevelu aux huiles naturelles.",
-      es: "Cuidado del cabello y cuero cabelludo con aceites naturales.",
+      ar: "أرقانور: زيوت أرغان وعناية طبيعية بالشعر والبشرة.",
+      en: "Arganour: argan oils and natural hair & skin care.",
+      fr: "Arganour : huiles d'argan et soins naturels.",
+      es: "Arganour: aceites de argán y cuidado natural.",
     },
-    tags: [
-      "hair",
-      "scalp",
-      "shampoo",
-      "conditioner",
-      "hair oil",
-      "dandruff",
-      "coconut",
-      "castor",
-      "rosemary",
-      "keratin",
-      "شعر",
-      "فروة",
-      "شامبو",
-      "زيت",
-      "قشرة",
-      "جوز الهند",
-      "خروع",
-      "روزماري",
-      "إكليل الجبل",
-    ],
+    tags: [...HAIR, "argan", "oils", "dry", "أرغان", "زيوت", "جافة"],
   },
   {
-    id: "athletic",
-    brand: "Athletic Cosmetic Company",
-    domain: "athleticcosmetic.com",
-    url: "https://yazing.com/deals/athleticcosmetic/alamrani_khalil",
+    id: "zeinah",
+    brand: "Zeinah",
+    domain: "zeinah.com.sa",
+    url: "https://zeinah.com.sa/?utm_source=linkaraby&utm_medium=referral&a_aid=hlxaz1bw4xpxe&a_bid=930fca6c",
     tagline: {
-      ar: "عناية للبشرة النشطة: تنقية المسام، الحبوب، والحماية اليومية.",
-      en: "Active-skin care: pore purifying, blemishes and daily protection.",
-      fr: "Soins peau active : pores, imperfections et protection quotidienne.",
-      es: "Cuidado para piel activa: poros, imperfecciones y protección diaria.",
+      ar: "زيناه: منتجات عناية وجمال مختارة للمرأة العربية.",
+      en: "Zeinah: curated beauty and care products.",
+      fr: "Zeinah : produits beauté et soins sélectionnés.",
+      es: "Zeinah: productos de belleza y cuidado seleccionados.",
+    },
+    tags: [...SKIN, "makeup", "body", "مكياج", "جسم", "عناية"],
+  },
+  {
+    id: "noon",
+    brand: "noon",
+    domain: "noon.com",
+    url: "https://s.noon.com/eDaCUkk_imw",
+    regionalUrls: {
+      SA: "https://s.noon.com/eDaCUkk_imw",
+      AE: "https://s.noon.com/nEEr_zjDqhI",
+      EG: "https://s.noon.com/0FfZKHCgGxs",
+      OM: "https://s.noon.com/AyECdPnWQqw",
+      BH: "https://s.noon.com/NSyHjcQWFd4",
+    },
+    countries: ["SA", "AE", "EG", "OM", "BH"],
+    tagline: {
+      ar: "نون: كل مستلزمات الجمال والعناية بتوصيل سريع.",
+      en: "noon: all your beauty essentials with fast delivery.",
+      fr: "noon : tous vos essentiels beauté livrés vite.",
+      es: "noon: esenciales de belleza con envío rápido.",
     },
     tags: [
-      "pores",
-      "acne",
-      "blemish",
-      "oily",
-      "sweat",
+      ...HAIR,
+      ...SKIN,
+      "oil",
+      "mask",
       "clay",
-      "charcoal",
-      "clay mask",
-      "cleanser",
-      "spf",
-      "sunscreen",
-      "body",
-      "feet",
-      "hands",
-      "مسام",
-      "حبوب",
-      "دهنية",
+      "rose",
+      "honey",
+      "vitamin",
+      "زيت",
+      "ماسك",
       "طين",
-      "فحم",
-      "غسول",
-      "جسم",
-      "قدم",
-      "يد",
-      "عرق",
-    ],
-  },
-  {
-    id: "reemncream",
-    brand: "Reem and Cream",
-    domain: "reemncream.com",
-    url: "https://reemncream.com/?utm_source=linkaraby&utm_medium=offers",
-    tagline: {
-      ar: "عناية ومكياج فاخر بمكوّنات مغذية، مناسب للبشرة العربية.",
-      en: "Luxury nourishing skincare & makeup, made for Arab skin.",
-      fr: "Soins et maquillage nourrissants de luxe pour peaux arabes.",
-      es: "Cuidado y maquillaje nutritivo de lujo para piel árabe.",
-    },
-    tags: [
-      "cream",
-      "moisturizer",
-      "body butter",
-      "shea",
-      "lips",
-      "makeup",
-      "glow",
-      "dry",
-      "hydration",
-      "kohl",
-      "كريم",
-      "مرطب",
-      "زبدة",
-      "شيا",
-      "شفاه",
-      "مكياج",
-      "جافة",
-      "ترطيب",
-      "نضارة",
+      "ورد",
+      "عسل",
+      "فيتامين",
     ],
   },
   {
     id: "iherb",
     brand: "iHerb",
     domain: "iherb.com",
-    url: "https://sa.iherb.com/?utm_source=linkaraby&utm_medium=offers",
+    url: "https://www.linkaraby.com/scripts/2xch8l8dq0?a_aid=hlxaz1bw4xpxe&a_bid=9eed17f1&desturl=https%3A%2F%2Fwww.linkaraby.com%2Fscripts%2F2xch8l8dq0%3Fa_aid%3Dhlxaz1bw4xpxe%26a_bid%3D9eed17f1",
     tagline: {
       ar: "أعشاب، زيوت طبيعية، فيتامينات ومكمّلات الجمال بأسعار ممتازة.",
       en: "Herbs, natural oils, vitamins and beauty supplements at great prices.",
@@ -272,6 +355,39 @@ export const GLOBAL_BRANDS: GlobalBrand[] = [
       "أظافر",
     ],
   },
+  {
+    id: "reemncream",
+    brand: "Reem and Cream",
+    domain: "reemncream.com",
+    url: "https://reemncream.com/?utm_source=linkaraby&utm_medium=offers",
+    tagline: {
+      ar: "عناية ومكياج فاخر بمكوّنات مغذية، مناسب للبشرة العربية.",
+      en: "Luxury nourishing skincare & makeup, made for Arab skin.",
+      fr: "Soins et maquillage nourrissants de luxe pour peaux arabes.",
+      es: "Cuidado y maquillaje nutritivo de lujo para piel árabe.",
+    },
+    tags: [
+      "cream",
+      "moisturizer",
+      "body butter",
+      "shea",
+      "lips",
+      "makeup",
+      "glow",
+      "dry",
+      "hydration",
+      "kohl",
+      "كريم",
+      "مرطب",
+      "زبدة",
+      "شيا",
+      "شفاه",
+      "مكياج",
+      "جافة",
+      "ترطيب",
+      "نضارة",
+    ],
+  },
 ];
 
 /** Ordered logo sources — the UI falls through to the next one on error. */
@@ -283,22 +399,39 @@ export function brandLogoSources(brand: GlobalBrand) {
   ];
 }
 
+/** Affiliate link for the visitor's country (falls back to the default url). */
+export function brandUrlFor(brand: GlobalBrand, country?: string | null) {
+  const code = (country ?? "").toUpperCase();
+  return brand.regionalUrls?.[code] ?? brand.url;
+}
+
+/** Brands visible to the visitor — country-locked partners stay hidden elsewhere. */
+export function brandsForCountry(country?: string | null) {
+  const code = (country ?? "").toUpperCase();
+  return GLOBAL_BRANDS.filter((b) => {
+    if (!b.countries) return true;
+    if (!code) return b.countries.includes("SA");
+    return b.countries.includes(code);
+  });
+}
+
 function norm(values: string[]) {
   return values.join(" ").toLowerCase();
 }
 
 /**
  * Match global partners to a set of ingredients / concerns / keywords.
- * Always returns at least `min` brands so every recommendation has a shop link.
+ * Always returns at least `limit` brands so every recommendation has a shop link.
  */
 export function matchGlobalBrands(
   keywords: string[],
-  opts: { limit?: number; seed?: string } = {},
+  opts: { limit?: number; seed?: string; country?: string | null } = {},
 ): GlobalBrand[] {
   const limit = opts.limit ?? 2;
   const haystack = norm(keywords);
+  const pool = brandsForCountry(opts.country);
 
-  const scored = GLOBAL_BRANDS.map((brand) => ({
+  const scored = pool.map((brand) => ({
     brand,
     score: brand.tags.reduce((acc, tag) => (haystack.includes(tag) ? acc + 1 : acc), 0),
   }));
@@ -312,7 +445,7 @@ export function matchGlobalBrands(
 
   // Deterministic fallback so guests still see partners (rotated by seed).
   const seed = (opts.seed ?? haystack).split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const rest = GLOBAL_BRANDS.filter((b) => !matched.includes(b));
+  const rest = pool.filter((b) => !matched.includes(b));
   const fill: GlobalBrand[] = [];
   for (let i = 0; fill.length < limit - matched.length && i < rest.length; i += 1) {
     fill.push(rest[(seed + i) % rest.length]!);
