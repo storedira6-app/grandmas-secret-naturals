@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Globe, ShoppingBag } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import {
-  GLOBAL_BRANDS,
   brandLogoSources,
+  brandUrlFor,
+  brandsForCountry,
   matchGlobalBrands,
   type GlobalBrand,
 } from "@/data/global-brands";
+import { useCountry } from "@/lib/store-client";
 
 function BrandLogo({ brand, className }: { brand: GlobalBrand; className?: string }) {
   const sources = brandLogoSources(brand);
@@ -37,6 +39,8 @@ function BrandLogo({ brand, className }: { brand: GlobalBrand; className?: strin
 /** Full "Global Beauty Market" partner grid shown on the store tab. */
 export function GlobalBrandMarket() {
   const { t, lang } = useI18n();
+  const { country } = useCountry();
+  const brands = brandsForCountry(country);
 
   return (
     <section className="animate-rise space-y-3 rounded-3xl border border-primary/25 bg-primary/5 p-3">
@@ -49,7 +53,7 @@ export function GlobalBrandMarket() {
       </header>
 
       <ul className="space-y-2.5">
-        {GLOBAL_BRANDS.map((b, i) => (
+        {brands.map((b, i) => (
           <li
             key={b.id}
             className="glass-card animate-rise flex items-center gap-3 rounded-2xl p-2.5"
@@ -65,7 +69,7 @@ export function GlobalBrandMarket() {
               </p>
             </div>
             <a
-              href={b.url}
+              href={brandUrlFor(b, country)}
               target="_blank"
               rel="noopener noreferrer sponsored"
               className="gradient-gold flex shrink-0 items-center gap-1 rounded-2xl px-3 py-2 text-[10px] font-bold text-gold-foreground transition-transform active:scale-95"
@@ -94,7 +98,8 @@ export function GlobalBrandSuggestions({
   limit?: number;
 }) {
   const { t, lang } = useI18n();
-  const brands = matchGlobalBrands(keywords, { limit, ...(seed ? { seed } : {}) });
+  const { country } = useCountry();
+  const brands = matchGlobalBrands(keywords, { limit, country, ...(seed ? { seed } : {}) });
   if (brands.length === 0) return null;
 
   return (
@@ -114,7 +119,7 @@ export function GlobalBrandSuggestions({
               <p className="truncate text-[10px] text-muted-foreground">{b.tagline[lang]}</p>
             </div>
             <a
-              href={b.url}
+              href={brandUrlFor(b, country)}
               target="_blank"
               rel="noopener noreferrer sponsored"
               className="gradient-forest shrink-0 rounded-xl px-2.5 py-1.5 text-[10px] font-bold text-primary-foreground transition-transform active:scale-95"
