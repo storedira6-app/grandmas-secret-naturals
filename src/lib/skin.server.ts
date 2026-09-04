@@ -148,7 +148,7 @@ RULES
 - "morning" / "evening": numbered-style daily routine steps (4-6 each) using natural, kitchen-friendly ingredients. "weekly": 1-3 weekly rituals (mask, scrub, oil massage).
 - "recipeTitle" + "recipeIngredients": one natural DIY recipe tailored to the biggest visible issue.
 - "precaution": Grandma's Precaution — always a patch test reminder.
-- "storeNote": a sweet one-line invite to the "Global Beauty Market" (متجر الجمال العالمي) tab, naming the most fitting partner for her result: NAZIH, Kaya, BOLVER USA, Argania Beauty, Arganour, Rawaj Care, IMOOIE, Taswahum, Victoria's Secret, Al Yasamine Cosmetics, Mayan Herb, Majestya, Zeinah, noon, iHerb or Reem and Cream. Otherwise an empty string.
+- "storeNote": a sweet one-line invite to the "Global Beauty Market" (متجر الجمال العالمي) tab, naming the most fitting partner for her result: NAZIH, Kaya, Arganour, Rawaj Care, IMOOIE, Taswahum, Victoria's Secret, Majestya, Zeinah, noon, iHerb or Reem and Cream. Otherwise an empty string.
 - Speak like a loving grandma, in ${language}.`,
         },
       ],
